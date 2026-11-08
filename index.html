@@ -1,0 +1,2913 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>A Diwali Surprise for Ma'am</title>
+  <style>
+    :root {
+      --gold: #f7d17a;
+      --cream: #fff2d8;
+      --pink: #e8a9bf;
+      --purple: #180c30;
+      --wine: #35113d
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      background: #09071b;
+      color: var(--cream);
+      font-family: Georgia, 'Times New Roman', serif;
+      overflow: hidden
+    }
+
+    #bg {
+      position: fixed;
+      inset: 0;
+      background: url("diwali_background.jpeg") center center / cover no-repeat;
+      z-index: -3
+    }
+
+    #stars {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    #fx {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100svh;
+      min-height: 100svh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      padding: clamp(10px, 2vw, 24px);
+      overflow: auto;
+      background: radial-gradient(ellipse at 50% 40%, #4b235b 0%, #211033 48%, #080719 100%);
+    }
+
+    .screen.active {
+      display: flex;
+      animation: fade .25s ease
+    }
+
+    .panel {
+      width: 100%;
+      height: 100%;
+      min-height: calc(100svh - 20px);
+      max-width: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: clamp(16px, 4vw, 48px);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      position: relative;
+      overflow-y: auto
+    }
+
+    .screen .panel>* {
+      max-width: min(900px, 100%)
+    }
+
+    .kicker {
+      font: 11px/1.5 Arial, sans-serif;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--gold)
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 8vw, 5.5rem);
+      font-weight: normal;
+      line-height: 1.04;
+      margin: 16px 0;
+      color: var(--gold);
+      text-shadow: 0 0 28px #ffca6755
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 6vw, 3.5rem);
+      font-weight: normal;
+      color: var(--gold);
+      margin: 12px 0 20px
+    }
+
+    p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      line-height: 1.8;
+      color: #ffefd9;
+      margin: 14px auto;
+      max-width: 700px
+    }
+
+    .small {
+      font-size: .9rem;
+      color: #d9c6e2
+    }
+
+    .orn {
+      font-size: clamp(30px, 7vw, 55px);
+      margin: 16px
+    }
+
+    .btn {
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      background: #f7d17a12;
+      border-radius: 999px;
+      padding: 13px 22px;
+      font: 13px Arial, sans-serif;
+      letter-spacing: .08em;
+      cursor: pointer;
+      margin: 10px 5px;
+      transition: .25s
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #f7d17a26;
+      box-shadow: 0 0 20px #f7d17a20
+    }
+
+    .btn.primary {
+      background: linear-gradient(120deg, #9c6724, #e8bd61);
+      color: #24102e;
+      border: 0
+    }
+
+    textarea {
+      display: block;
+      width: min(650px, 100%);
+      margin: 18px auto;
+      padding: 14px;
+      border-radius: 14px;
+      background: #120921aa;
+      border: 1px solid #f7d17a66;
+      color: #fff0d8;
+      font: 16px Georgia;
+      line-height: 1.5;
+      resize: vertical;
+      min-height: 100px
+    }
+
+    .photo-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 20px auto
+    }
+
+    .photo-box {
+      width: min(37vw, 230px);
+      height: min(42vw, 260px);
+      min-width: 140px;
+      min-height: 170px;
+      border: 1px solid #f7d17a88;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(160deg, #5c2a5d, #1b0d30);
+      display: grid;
+      place-items: center;
+      position: relative;
+      box-shadow: 0 0 30px #f7d17a16
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none
+    }
+
+    .photo-box .placeholder {
+      padding: 15px;
+      color: #f8d98e;
+      font-size: 14px
+    }
+
+    .photo-box label {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: #120921d9;
+      border: 1px solid #f7d17a77;
+      border-radius: 12px;
+      padding: 9px;
+      font: 11px Arial, sans-serif;
+      color: #ffe4a3;
+      cursor: pointer
+    }
+
+    .photo-box input {
+      display: none
+    }
+
+    .puja {
+      background: radial-gradient(ellipse at center, #54275d 0, #25113c 48%, #09071b 100%)
+    }
+
+    .puja .panel {
+      max-width: 980px;
+      overflow: hidden
+    }
+
+    #petals {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 2
+    }
+
+    .petal {
+      position: absolute;
+      top: -40px;
+      font-size: 22px;
+      animation: petalFall linear forwards;
+      filter: drop-shadow(0 0 7px #ff4568)
+    }
+
+    @keyframes petalFall {
+      to {
+        transform: translate3d(var(--drift), 110vh, 0) rotate(720deg);
+        opacity: .1
+      }
+    }
+
+    .offer {
+      height: 92px;
+      position: relative;
+      margin: 8px auto 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: 1.2s
+    }
+
+    .offer.show {
+      opacity: 1;
+      transform: none
+    }
+
+    .hand {
+      font-size: 50px;
+      display: inline-block;
+      animation: offer 2.3s ease-in-out infinite
+    }
+
+    .sunflower {
+      font-size: 52px;
+      margin-left: -5px;
+      display: inline-block;
+      filter: drop-shadow(0 0 14px #ffc84b);
+      animation: flowerGlow 1.7s alternate infinite
+    }
+
+    @keyframes offer {
+
+      0%,
+      100% {
+        transform: translateX(-12px) rotate(-5deg)
+      }
+
+      50% {
+        transform: translateX(12px) rotate(4deg)
+      }
+    }
+
+    @keyframes flowerGlow {
+      to {
+        filter: drop-shadow(0 0 22px #ffdd68);
+        transform: scale(1.08)
+      }
+    }
+
+    /* Authentic Devotional Aarti Circular Orbit & Brass Thali */
+    .aarti-container {
+      position: relative;
+      width: min(360px, 92vw);
+      height: 220px;
+      margin: 8px auto 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .aarti-orbit {
+      position: absolute;
+      width: 250px;
+      height: 140px;
+      border: 2.5px dashed rgba(255, 215, 80, 0.75);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(255, 190, 40, 0.35), inset 0 0 16px rgba(255, 190, 40, 0.2);
+      pointer-events: none;
+      animation: orbitGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes orbitGlow {
+      from {
+        border-color: rgba(255, 215, 80, 0.6);
+        box-shadow: 0 0 14px rgba(255, 190, 40, 0.25), inset 0 0 12px rgba(255, 190, 40, 0.12);
+      }
+
+      to {
+        border-color: rgba(255, 240, 150, 0.95);
+        box-shadow: 0 0 26px rgba(255, 210, 60, 0.55), inset 0 0 20px rgba(255, 210, 60, 0.3);
+      }
+    }
+
+    .aarti-sparkle-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #fff6d1;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ffc83b, 0 0 16px #ff8800;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+
+    .aarti-sparkle-dot.dot-t {
+      top: 0;
+      left: 50%;
+    }
+
+    .aarti-sparkle-dot.dot-r {
+      top: 50%;
+      left: 100%;
+    }
+
+    .aarti-sparkle-dot.dot-b {
+      top: 100%;
+      left: 50%;
+    }
+
+    .aarti-sparkle-dot.dot-l {
+      top: 50%;
+      left: 0;
+    }
+
+    .aarti-thali-item {
+      position: absolute;
+      width: 135px;
+      height: 88px;
+      transform: translate(-50%, -50%);
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      z-index: 10;
+      transition: filter 0.2s;
+      will-change: transform;
+    }
+
+    .aarti-thali-item:active {
+      cursor: grabbing;
+    }
+
+    .aarti-thali-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 14px rgba(255, 185, 45, 0.7));
+    }
+
+    .diya-flame-pulsar {
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      width: 22px;
+      height: 22px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 200, 50, 0.85) 45%, rgba(255, 80, 0, 0) 80%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: flamePulse 1.2s ease-in-out infinite alternate;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes flamePulse {
+      0% {
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translate(-50%, -50%) scale(1.35);
+        opacity: 1;
+      }
+    }
+
+    .aarti-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .aarti-instruction {
+      font-size: clamp(0.9rem, 2.8vw, 1.05rem);
+      color: #ffe6a6;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+      font-weight: 500;
+      text-align: center;
+      transition: color 0.3s;
+    }
+
+    .aarti-meta-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .aarti-progress-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(22, 10, 36, 0.85);
+      border: 1px solid rgba(255, 215, 100, 0.45);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 13px;
+      color: #ffe7a3;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .aarti-auto-toggle {
+      background: rgba(35, 14, 55, 0.85);
+      border: 1px solid rgba(255, 200, 80, 0.5);
+      border-radius: 18px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: #ffd875;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .aarti-auto-toggle:active {
+      transform: scale(0.95);
+    }
+
+    .aarti-auto-toggle.active {
+      background: rgba(85, 30, 110, 0.9);
+      border-color: #ffd76a;
+      color: #ffffff;
+    }
+
+    .aarti-spark-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ffeb3b, 0 0 16px #ff9800;
+      pointer-events: none;
+      animation: aartiSparkFade 0.6s ease-out forwards;
+      z-index: 12;
+    }
+
+    @keyframes aartiSparkFade {
+      0% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(0.2) translateY(-14px);
+        opacity: 0;
+      }
+    }
+
+    .glow-pulse {
+      animation: goldGlowPulse 1.4s ease-in-out infinite alternate !important;
+      border-color: #ffe082 !important;
+      color: #fff9e6 !important;
+    }
+
+    @keyframes goldGlowPulse {
+      0% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        transform: scale(1);
+      }
+
+      100% {
+        box-shadow: 0 0 28px rgba(255, 215, 0, 0.95), 0 0 45px rgba(255, 140, 0, 0.6);
+        transform: scale(1.04);
+      }
+    }
+
+    .audio-note {
+      font: 12px Arial, sans-serif;
+      color: #d9c6e2;
+      margin: 10px
+    }
+
+    .scratch {
+      width: min(580px, 92vw);
+      aspect-ratio: 1024 / 558;
+      max-height: min(340px, 48vh);
+      margin: 16px auto;
+      border: 2px solid #f7d17abb;
+      border-radius: 22px;
+      position: relative;
+      overflow: hidden;
+      background: #150926;
+      box-shadow: 0 0 35px rgba(247, 209, 122, 0.3), 0 10px 32px rgba(0, 0, 0, 0.8);
+      touch-action: none
+    }
+
+    .scratch .under {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden
+    }
+
+    .scratch-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .scratch canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      touch-action: none
+    }
+
+    .fireworks {
+      font-size: clamp(2rem, 8vw, 5rem);
+      letter-spacing: .2em;
+      animation: pop .8s ease infinite alternate
+    }
+
+    @keyframes pop {
+      to {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 25px #ffd96a)
+      }
+    }
+
+    footer {
+      font: 10px Arial, sans-serif;
+      letter-spacing: .2em;
+      color: #c7b4d4;
+      margin-top: 24px
+    }
+
+    @keyframes fade {
+      from {
+        opacity: .4;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+
+    /* Screen 7 & 8: Grand Fireworks & Rocket Finale */
+    #s7,
+    #s8 {
+      background: radial-gradient(circle at 50% 65%, #180826 0%, #080312 65%, #020108 100%);
+      isolation: isolate;
+      overflow: hidden;
+      min-height: 100svh;
+    }
+
+    #s7 .finale-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      pointer-events: none;
+    }
+
+    #s7.video-active .finale-video {
+      opacity: 1;
+    }
+
+    #s8 .finale-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    #s7:after,
+    #s8:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #05040d66 0%, #07040b20 38%, #07040b99 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .finale-curtain {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(5, 4, 13, 0.45) 0%, rgba(7, 4, 11, 0.2) 40%, rgba(7, 4, 11, 0.85) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .flash-blast {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, rgba(255, 242, 191, 0.85) 45%, rgba(255, 160, 30, 0) 80%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 40;
+      visibility: hidden;
+      transition: opacity 0.35s ease-out, visibility 0.35s;
+    }
+
+    .flash-blast.active {
+      visibility: visible;
+      opacity: 1;
+      transition: none;
+    }
+
+    #s7 .panel,
+    #s8 .panel {
+      min-height: 100svh;
+      justify-content: center;
+    }
+
+    #s7 .kicker,
+    #s8 .kicker {
+      color: #ffe6a4;
+      text-shadow: 0 2px 12px #000;
+    }
+
+    #s7 h2,
+    #s8 h1 {
+      color: #fff2cf;
+      text-shadow: 0 0 18px #ffbd5a, 0 0 45px #ff3e5e, 0 3px 16px #000;
+      font-size: clamp(2.3rem, 8vw, 4.8rem);
+    }
+
+    #s7 p,
+    #s8 p {
+      color: #fff8ed;
+      text-shadow: 0 2px 12px #000;
+      font-size: clamp(1rem, 3vw, 1.35rem);
+    }
+
+    #s7 .btn,
+    #s8 .btn {
+      background: #180c30a8;
+      backdrop-filter: blur(5px);
+      border-color: #ffe19a;
+      color: #ffe8b0;
+    }
+
+    #s7 .fireworks {
+      font-size: clamp(1.8rem, 7vw, 5rem);
+      letter-spacing: .03em;
+      color: #fff2c4;
+      text-shadow: 0 0 20px #ffb94c;
+    }
+
+    /* Rocket Launch Stage */
+    .rocket-stage {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      width: 100%;
+      max-width: 580px;
+      min-height: 100svh;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: clamp(16px, 4vh, 32px) 16px clamp(20px, 4vh, 36px);
+      box-sizing: border-box;
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .rocket-header {
+      text-align: center;
+      margin-top: clamp(8px, 2vh, 16px);
+    }
+
+    .rocket-header h2 {
+      color: #fff2cf;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      margin: 6px 0 8px;
+      text-shadow: 0 0 16px #ffb347, 0 0 35px #ff5722;
+    }
+
+    .rocket-subtitle {
+      color: #ffe8b5;
+      font-size: clamp(0.92rem, 3vw, 1.15rem);
+      max-width: 440px;
+      margin: 0 auto;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+      line-height: 1.4;
+    }
+
+    .rocket-scene {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: clamp(10px, 3vh, 30px);
+    }
+
+    /* The Rocket Interactive Entity */
+    .rocket-interactive {
+      position: relative;
+      width: 150px;
+      height: 310px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .rocket-assembly {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 3;
+      will-change: transform;
+    }
+
+    /* Rocket Nose Cone */
+    .r-nose {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 38px solid #d32f2f;
+      filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.6));
+      position: relative;
+      z-index: 2;
+    }
+
+    .r-nose::after {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: -9px;
+      width: 0;
+      height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-bottom: 22px solid #ffd54f;
+    }
+
+    /* Rocket Cylinder Body */
+    .r-cylinder {
+      width: 40px;
+      height: 96px;
+      background: linear-gradient(90deg, #8b0000 0%, #d32f2f 25%, #ff5252 50%, #c62828 75%, #5c0000 100%);
+      border-radius: 2px 2px 4px 4px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 14px rgba(255, 80, 0, 0.5), inset 0 0 8px rgba(255, 235, 120, 0.6);
+      z-index: 2;
+      border-left: 1px solid rgba(255, 215, 100, 0.4);
+      border-right: 1px solid rgba(255, 215, 100, 0.3);
+    }
+
+    .r-cap-gold {
+      width: 100%;
+      height: 9px;
+      background: linear-gradient(90deg, #ffc107, #fff8e1, #ff8f00);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .r-pattern {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.1;
+      transform: rotate(-90deg);
+      user-select: none;
+    }
+
+    .r-text {
+      font: 900 11px Arial, sans-serif;
+      letter-spacing: 2px;
+      color: #ffe082;
+      text-shadow: 0 0 6px #ff8f00, 0 1px 2px #000;
+    }
+
+    .r-subtext {
+      font: 700 8px Arial, sans-serif;
+      letter-spacing: 3px;
+      color: #ffffff;
+      text-shadow: 0 0 4px #e91e63;
+    }
+
+    .r-stripes {
+      width: 100%;
+      height: 12px;
+      background: repeating-linear-gradient(45deg, #ffd700, #ffd700 4px, #d32f2f 4px, #d32f2f 8px);
+    }
+
+    /* Rocket Fins */
+    .r-fin {
+      position: absolute;
+      top: 110px;
+      width: 0;
+      height: 0;
+      border-top: 26px solid transparent;
+      z-index: 1;
+    }
+
+    .r-fin.left {
+      left: -9px;
+      border-right: 14px solid #b71c1c;
+      filter: drop-shadow(-1px 0 2px rgba(0, 0, 0, 0.5));
+    }
+
+    .r-fin.right {
+      right: -9px;
+      border-left: 14px solid #b71c1c;
+      filter: drop-shadow(1px 0 2px rgba(0, 0, 0, 0.5));
+    }
+
+    /* Guide Stick */
+    .r-stick {
+      position: absolute;
+      top: 134px;
+      width: 5px;
+      height: 135px;
+      background: linear-gradient(90deg, #5d4037, #bcaaa4 45%, #4e342e);
+      border-radius: 2px;
+      box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+
+    /* Fuse & Spark */
+    .r-fuse-wrap {
+      position: absolute;
+      top: 132px;
+      right: 2px;
+      width: 32px;
+      height: 38px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .r-fuse-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+    }
+
+    .r-spark {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      width: 9px;
+      height: 9px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ffeb3b, 0 0 16px #ff5722, 0 0 24px #ff9800;
+      animation: sparkPulse 0.15s ease-in-out infinite alternate;
+    }
+
+    @keyframes sparkPulse {
+      0% {
+        transform: scale(0.85);
+        box-shadow: 0 0 6px #ffeb3b, 0 0 14px #ff5722;
+      }
+
+      100% {
+        transform: scale(1.35);
+        box-shadow: 0 0 12px #fff, 0 0 22px #ff9800, 0 0 30px #e91e63;
+      }
+    }
+
+    /* Launch Bottle */
+    .r-bottle {
+      position: absolute;
+      bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .r-bottle-neck {
+      width: 15px;
+      height: 25px;
+      background: linear-gradient(90deg, #1b4d3e, #66bb6a 45%, #14362b);
+      border-radius: 3px 3px 0 0;
+      border: 1px solid rgba(255, 235, 150, 0.35);
+      box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.4);
+    }
+
+    .r-bottle-body {
+      width: 44px;
+      height: 52px;
+      background: radial-gradient(circle at 35% 35%, rgba(102, 187, 106, 0.85) 0%, rgba(27, 77, 62, 0.95) 70%, #0d271f 100%);
+      border-radius: 6px 6px 14px 14px;
+      border: 1.5px solid rgba(255, 215, 100, 0.45);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.25);
+    }
+
+    .r-bottle-base {
+      width: 58px;
+      height: 10px;
+      background: radial-gradient(ellipse at center, rgba(255, 180, 50, 0.6) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%);
+      border-radius: 50%;
+      margin-top: -3px;
+    }
+
+    /* Touch Hint Pill */
+    .rocket-hint-pill {
+      position: absolute;
+      bottom: -6px;
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+      border: 1.5px solid #ffe082;
+      border-radius: 25px;
+      padding: 7px 18px;
+      font: 700 13px Arial, sans-serif;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 0 18px rgba(255, 152, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5);
+      animation: hintBounce 1.5s ease-in-out infinite;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    @keyframes hintBounce {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-6px) scale(1.05);
+      }
+    }
+
+    .hint-hand {
+      font-size: 17px;
+      animation: handWiggle 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes handWiggle {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(-4px);
+      }
+    }
+
+    /* Launch Animations */
+    .rocket-assembly.vibrating {
+      animation: rocketPreLaunchShake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+    }
+
+    @keyframes rocketPreLaunchShake {
+
+      0%,
+      100% {
+        transform: translateX(-50%) rotate(0deg);
+      }
+
+      25% {
+        transform: translateX(-52%) rotate(-1.5deg);
+      }
+
+      75% {
+        transform: translateX(-48%) rotate(1.5deg);
+      }
+    }
+
+    .rocket-assembly.launched {
+      animation: rocketAscendSky 1.05s cubic-bezier(0.22, 0.05, 0.36, 1) forwards;
+    }
+
+    @keyframes rocketAscendSky {
+      0% {
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+
+      18% {
+        transform: translateX(-50%) translateY(-30px) scale(0.98);
+      }
+
+      45% {
+        transform: translateX(-50%) translateY(-220px) scale(0.85);
+      }
+
+      75% {
+        transform: translateX(-50%) translateY(-560px) scale(0.65);
+      }
+
+      100% {
+        transform: translateX(-50%) translateY(calc(-100vh - 280px)) scale(0.35);
+        opacity: 0.85;
+      }
+    }
+
+    /* Exhaust Jet */
+    .r-exhaust {
+      position: absolute;
+      top: 135px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 90px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .r-exhaust-flame {
+      width: 14px;
+      height: 75px;
+      background: linear-gradient(180deg, #ffffff 0%, #ffeb3b 25%, #ff9800 55%, #f44336 85%, transparent 100%);
+      border-radius: 50% 50% 70% 70%;
+      filter: drop-shadow(0 0 12px #ff9800);
+      animation: jetFlicker 0.08s infinite alternate;
+    }
+
+    @keyframes jetFlicker {
+      0% {
+        transform: scaleX(0.85) scaleY(0.9);
+      }
+
+      100% {
+        transform: scaleX(1.2) scaleY(1.15);
+      }
+    }
+
+    .rocket-exhaust-ember {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, #ffffff 0%, #ffeb3b 40%, #ff5722 80%);
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ff9800, 0 0 20px #e91e63;
+      pointer-events: none;
+      z-index: 35;
+      animation: emberDrop 0.7s ease-out forwards;
+    }
+
+    @keyframes emberDrop {
+      0% {
+        transform: scale(1.4) translateY(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(0.3) translateY(35px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes sparkFierce {
+      0% {
+        transform: scale(1.2);
+        box-shadow: 0 0 10px #fff, 0 0 25px #ff9800;
+      }
+
+      100% {
+        transform: scale(2.2);
+        box-shadow: 0 0 18px #fff, 0 0 35px #ff3d00, 0 0 50px #ffeb3b;
+      }
+    }
+
+    /* Celebration Panel Fade-In */
+    #fireworksPanel {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      min-height: 100svh;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: clamp(16px, 4vw, 36px);
+      box-sizing: border-box;
+      display: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transform: scale(0.96);
+    }
+
+    #fireworksPanel.visible {
+      display: flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: scale(1) !important;
+    }
+
+    #fireworksPanel .celebration-card {
+      background: linear-gradient(160deg, rgba(42, 16, 62, 0.95) 0%, rgba(18, 7, 30, 0.97) 100%);
+      border: 2px solid #ffd76a;
+      border-radius: 24px;
+      padding: clamp(22px, 4vh, 36px) clamp(16px, 4vw, 30px);
+      box-shadow: 0 10px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 180, 50, 0.45);
+      max-width: min(500px, 94vw);
+      margin: auto;
+      text-align: center;
+    }
+
+    #fireworksPanel .celebration-card h2 {
+      color: #fff3c9 !important;
+      text-shadow: 0 0 20px #ff9800, 0 0 45px #e65100, 0 2px 8px #000 !important;
+      font-size: clamp(2.1rem, 7.5vw, 3.4rem) !important;
+      margin: 8px 0 12px !important;
+      font-weight: 700;
+    }
+
+    #fireworksPanel .celebration-card p {
+      color: #ffffff !important;
+      text-shadow: 0 1px 6px #000 !important;
+      font-size: clamp(0.98rem, 2.9vw, 1.22rem) !important;
+      line-height: 1.6 !important;
+      margin: 8px auto !important;
+    }
+
+    #fireworksPanel .celebration-card .kicker {
+      color: #ffd76a !important;
+      letter-spacing: .22em;
+      font-weight: 600;
+    }
+
+    #fireworksPanel .celebration-card .btn {
+      background: #2a134ee8 !important;
+      border: 1.5px solid #ffe19a !important;
+      color: #fff8e1 !important;
+      font-weight: 600;
+      font-size: clamp(12.5px, 2.6vw, 14.5px);
+      padding: 11px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    #fireworksPanel .celebration-card .btn.primary {
+      background: linear-gradient(135deg, #d32f2f, #f57c00) !important;
+      border-color: #ffd76a !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 22px rgba(255, 152, 0, 0.65) !important;
+    }
+
+
+    #s0 {
+      background: radial-gradient(ellipse at 50% 30%, #301438 0%, #170b24 55%, #090614 100%) !important;
+      isolation: isolate
+    }
+
+    #s0.active {
+      animation: none;
+      display: flex
+    }
+
+    #s0 .panel {
+      min-height: 100svh;
+      justify-content: center;
+      position: relative
+    }
+
+    #s0 .ram-opening h1 {
+      letter-spacing: .025em;
+      text-shadow: 0 0 24px #ff9e3d, 0 0 55px #a43d16, 0 3px 14px #000
+    }
+
+    #s0 .ram-opening .kicker,
+    #s0 .ram-opening footer {
+      color: #ffd98b;
+      text-shadow: 0 2px 10px #000
+    }
+
+    .ram-photo-card {
+      margin: 14px auto;
+      width: min(92vw, 640px);
+      display: flex;
+      justify-content: center
+    }
+
+    .ram-photo-frame {
+      position: relative;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid #f7d17abb;
+      box-shadow: 0 0 35px rgba(247, 209, 122, 0.35), 0 12px 36px rgba(0, 0, 0, 0.85);
+      background: linear-gradient(160deg, #3d1b46, #140924);
+      transition: transform .3s ease, box-shadow .3s ease
+    }
+
+    .ram-photo-frame:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 45px rgba(247, 209, 122, 0.48), 0 16px 42px rgba(0, 0, 0, 0.9)
+    }
+
+    .ram-photo-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: min(46vh, 360px);
+      object-fit: cover;
+      object-position: center 20%
+    }
+
+    .ram-photo-frame .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(0deg, rgba(14, 7, 26, 0.95) 0%, rgba(14, 7, 26, 0.75) 75%, transparent 100%);
+      border-top: 1px solid rgba(247, 209, 122, 0.35);
+      padding: 10px 14px 8px;
+      font: 13px Georgia, serif;
+      letter-spacing: .06em;
+      color: #ffe5a3;
+      text-shadow: 0 2px 8px #000
+    }
+
+    #bg:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #05061155 0%, #08051188 55%, #08051166 100%);
+      pointer-events: none
+    }
+
+    .screen {
+      background: transparent
+    }
+
+    .puja {
+      background: transparent
+    }
+
+    .fixed-photos .photo-box {
+      overflow: hidden
+    }
+
+    .fixed-photos .fixed-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .fixed-photos .photo-caption {
+      position: absolute;
+      bottom: 7px;
+      left: 7px;
+      right: 7px;
+      padding: 7px 8px;
+      background: #120921d9;
+      border: 1px solid #f7d17a77;
+      border-radius: 10px;
+      color: #ffe4a3;
+      font: 11px Arial, sans-serif;
+      letter-spacing: .04em
+    }
+
+    /* Aarti styling handled by modern aarti-container */
+
+    #s4 #afterAarti {
+      display: inline-block !important;
+      margin: 14px auto 24px;
+      position: relative;
+      z-index: 4
+    }
+
+    #s4 .aarti-wrap {
+      margin: 12px auto
+    }
+
+    #s4 .audio-note {
+      max-width: 90%;
+      text-align: center
+    }
+
+    .diya-page {
+      background: transparent !important
+    }
+
+    .five-diyas {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(8px, 2.4vw, 28px);
+      flex-wrap: wrap;
+      margin: clamp(18px, 4vh, 38px) auto
+    }
+
+    .diya-touch {
+      width: clamp(58px, 12vw, 104px);
+      height: clamp(76px, 14vw, 120px);
+      border: 1px solid #f7d17a88;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #14091eaa, #3a1b2baa);
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      cursor: pointer;
+      filter: grayscale(.8) brightness(.62);
+      transition: transform .35s, filter .35s, box-shadow .35s;
+      touch-action: manipulation
+    }
+
+    .diya-touch.lit {
+      filter: grayscale(0) brightness(1.22);
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px #ffc84b99, 0 0 50px #ff9d3655;
+      animation: diyaFlicker 1.6s ease-in-out infinite alternate
+    }
+
+    .diya-touch:active {
+      transform: scale(.94)
+    }
+
+    @keyframes diyaFlicker {
+      from {
+        filter: brightness(1.05) drop-shadow(0 0 8px #ffbc4a)
+      }
+
+      to {
+        filter: brightness(1.35) drop-shadow(0 0 20px #ffd45c)
+      }
+    }
+
+    .diya-instruction,
+    .diya-count {
+      font-size: clamp(1.1rem, 3vw, 1.45rem);
+      text-shadow: 0 2px 10px #000
+    }
+
+    #continueDiyas:disabled {
+      opacity: .48;
+      cursor: not-allowed
+    }
+
+
+
+    .music-toggle {
+      position: fixed;
+      top: 14px;
+      right: 16px;
+      z-index: 30;
+      background: #180c2ee6;
+      border: 1px solid #f7d17a99;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font: 12px Arial, sans-serif;
+      letter-spacing: .05em;
+      color: #ffe5a3;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 15px rgba(247, 209, 122, 0.2);
+      transition: all .25s ease
+    }
+
+    .music-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 22px rgba(247, 209, 122, 0.4)
+    }
+
+    .music-toggle.muted {
+      opacity: .65;
+      border-color: #a89aa0;
+      color: #d0c6cd
+    }
+
+    .rangoli-panel {
+      max-width: 980px
+    }
+
+    .rangoli-wrapper {
+      width: min(86vw, 360px);
+      height: min(86vw, 360px);
+      margin: 6px auto;
+      border-radius: 50%;
+      background: #140822;
+      border: 2.5px solid #ffd76abb;
+      box-shadow: 0 0 35px rgba(255, 215, 106, 0.4), 0 10px 30px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+      touch-action: none;
+      position: relative;
+    }
+
+    #rangoliCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 50%;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .rangoli-palette {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 6px auto 4px;
+      max-width: min(94vw, 440px);
+      max-height: 86px;
+      overflow-y: auto;
+      padding: 4px;
+      scrollbar-width: thin;
+    }
+
+    .color-swatch {
+      width: clamp(26px, 6.4vw, 32px);
+      height: clamp(26px, 6.4vw, 32px);
+      border-radius: 50%;
+      border: 2px solid #ffffff44;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      touch-action: manipulation;
+      flex-shrink: 0;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.18);
+    }
+
+    .color-swatch.active {
+      transform: scale(1.25);
+      border-color: #ffffff;
+      box-shadow: 0 0 16px var(--swatch-color, #ffd700), 0 0 4px #fff;
+    }
+
+    .rangoli-controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2px auto 6px;
+    }
+
+    .rangoli-btn {
+      border: 1px solid #f7d17a77;
+      color: #ffe4a3;
+      background: #1b0d2daa;
+      border-radius: 999px;
+      padding: 6px 13px;
+      font: 11.5px Arial, sans-serif;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .rangoli-btn:hover {
+      background: #f7d17a22;
+      border-color: #f7d17a;
+    }
+
+    .rangoli-btn.active {
+      background: linear-gradient(120deg, #9c6724, #e8bd61);
+      color: #1f0c2a;
+      font-weight: bold;
+      border-color: #ffd76a;
+    }
+
+    @media(max-width:600px) {
+      .panel {
+        min-height: calc(100svh - 20px);
+        padding: 10px 8px
+      }
+
+      .photo-box {
+        width: 42vw;
+        height: 43vw;
+        min-height: 145px
+      }
+
+      .btn {
+        padding: 10px 15px;
+        font-size: 12px
+      }
+
+      .photo-row {
+        gap: 8px
+      }
+
+      .offer {
+        height: 72px
+      }
+
+      .hand,
+      .sunflower {
+        font-size: 42px
+      }
+
+      .ram-photo-card {
+        margin: 8px auto;
+        width: 95vw
+      }
+
+      .ram-photo-frame img {
+        max-height: min(30vh, 210px)
+      }
+
+      .ram-photo-frame .caption {
+        font-size: 10.5px;
+        padding: 5px 6px;
+        letter-spacing: .02em
+      }
+
+      .music-toggle {
+        top: 8px;
+        right: 10px;
+        padding: 4px 9px;
+        font-size: 10px
+      }
+
+      .rangoli-wrapper {
+        width: min(80vw, 290px);
+        height: min(80vw, 290px);
+        margin: 3px auto;
+        padding: 0;
+      }
+
+      .rangoli-palette {
+        gap: 5px;
+        margin: 2px auto 4px;
+        max-height: 74px;
+      }
+
+      .color-swatch {
+        width: 23px;
+        height: 23px;
+      }
+
+      .rangoli-controls {
+        gap: 4px;
+        margin: 2px auto 4px
+      }
+
+      .rangoli-btn {
+        padding: 4px 8px;
+        font-size: 10px
+      }
+
+      .rangoli-instruction {
+        font-size: 0.85rem !important;
+        line-height: 1.3 !important;
+        margin: 2px auto 3px !important
+      }
+
+      #s2 h2 {
+        margin: 3px 0 2px !important;
+        font-size: 1.6rem !important
+      }
+
+      #rangoliStatus {
+        margin: 3px auto 5px !important;
+        font-size: 0.78rem !important
+      }
+
+      /* Mobile Aarti Screen */
+      .aarti-container {
+        width: 95vw;
+        height: 185px;
+        margin: 4px auto 2px;
+      }
+
+      .aarti-orbit {
+        width: 215px;
+        height: 120px;
+      }
+
+      .aarti-thali-item {
+        width: 110px;
+        height: 72px;
+      }
+
+      .aarti-instruction {
+        font-size: 0.88rem;
+      }
+
+      .aarti-progress-pill,
+      .aarti-auto-toggle {
+        font-size: 11px;
+        padding: 3px 10px;
+      }
+
+      #s4 .photo-box {
+        max-height: 135px;
+        min-height: 115px;
+      }
+
+      /* Mobile Firecracker Rocket & Finale */
+      .rocket-stage {
+        padding: clamp(12px, 3vh, 20px) 12px clamp(16px, 3vh, 24px);
+        min-height: 100svh;
+      }
+
+      .rocket-header h2 {
+        font-size: 1.85rem;
+      }
+
+      .rocket-subtitle {
+        font-size: 0.88rem;
+      }
+
+      .rocket-interactive {
+        height: 270px;
+        width: 130px;
+      }
+
+      .rocket-assembly {
+        bottom: 50px;
+        height: 210px;
+      }
+
+      .r-nose {
+        border-left-width: 17px;
+        border-right-width: 17px;
+        border-bottom-width: 32px;
+      }
+
+      .r-cylinder {
+        width: 34px;
+        height: 82px;
+      }
+
+      .r-fin {
+        top: 96px;
+      }
+
+      .r-fin.left {
+        border-right-width: 12px;
+        left: -8px;
+      }
+
+      .r-fin.right {
+        border-left-width: 12px;
+        right: -8px;
+      }
+
+      .r-stick {
+        top: 116px;
+        height: 110px;
+      }
+
+      .r-bottle {
+        bottom: 30px;
+      }
+
+      .r-bottle-neck {
+        width: 13px;
+        height: 20px;
+      }
+
+      .r-bottle-body {
+        width: 38px;
+        height: 44px;
+      }
+
+      .rocket-hint-pill {
+        font-size: 12px;
+        padding: 6px 14px;
+        bottom: -4px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <audio id="bgMusic" src="alo-amar-alo-ogo.mp3" loop preload="auto"></audio>
+  <audio id="pujaMusic" src="eso-ma-lokkhi-boso-ghore.mp3" loop preload="auto"></audio>
+  <button id="musicToggle" class="music-toggle" onclick="toggleMute()" aria-label="Toggle festive music">🎵 Music:
+    On</button>
+
+  <div id="bg"></div><canvas id="stars"></canvas><canvas id="fx"></canvas>
+
+  <!-- Screen 0: Opening / Ram Darbar -->
+  <div class="screen active" id="s0">
+    <div class="panel ram-opening">
+      <div class="kicker">॥ श्री राम ॥ • A devotional beginning</div>
+      <h1
+        style="font-size:clamp(2.3rem,7.5vw,4.8rem);color:#ffe7a6;text-shadow:0 0 24px #ff9e3d,0 0 55px #a43d16;margin:10px 0 8px">
+        Jai Shree Ram</h1>
+      <div class="ram-photo-card">
+        <div class="ram-photo-frame">
+          <img src="shree_ram_sita_lakshman.jpg" alt="Prabhu Shree Ram, Mata Sita & Lakshman in Ayodhya">
+          <div class="caption">॥ सियावर रामचंद्र की जय ॥</div>
+        </div>
+      </div>
+      <p style="font-size:clamp(1.02rem,2.6vw,1.35rem);line-height:1.6;margin:10px auto 6px">With the divine blessings
+        of Prabhu Shree Ram,<br>let’s begin this Diwali celebration…</p>
+      <p class="small" style="margin:4px auto 14px">A little festive surprise, prepared with respect and heartfelt
+        wishes for Ma’am.</p>
+      <button class="btn primary" onclick="go(1)">Begin the celebration →</button>
+      <footer>॥ श्री राम जय राम जय जय राम ॥</footer>
+    </div>
+  </div>
+
+  <!-- Screen 1: Diyas -->
+  <div class="screen diya-page" id="s1">
+    <div class="panel">
+      <div class="kicker">A little light, one diya at a time</div>
+      <h2>Let’s light the diyas 🪔</h2>
+      <p class="diya-instruction" id="diyaInstruction">Touch each Diya to light it.</p>
+      <div class="five-diyas" aria-label="Five diyas to light">
+        <button class="diya-touch" aria-label="Light diya 1" onclick="lightDiya(0)">🪔</button>
+        <button class="diya-touch" aria-label="Light diya 2" onclick="lightDiya(1)">🪔</button>
+        <button class="diya-touch" aria-label="Light diya 3" onclick="lightDiya(2)">🪔</button>
+        <button class="diya-touch" aria-label="Light diya 4" onclick="lightDiya(3)">🪔</button>
+        <button class="diya-touch" aria-label="Light diya 5" onclick="lightDiya(4)">🪔</button>
+      </div>
+      <p id="diyaCount" class="diya-count">0 of 5 diyas lit</p>
+      <button class="btn primary" id="continueDiyas" disabled onclick="go(2)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Screen 2: Lord Shiva Rangoli Coloring Page -->
+  <div class="screen" id="s2">
+    <div class="panel rangoli-panel">
+      <div class="kicker">Festive Art • Colors of Diwali</div>
+      <h2 style="margin:4px 0 2px">Color Lord Shiva’s Rangoli 🪷</h2>
+      <p class="rangoli-instruction" id="rangoliInstruction"
+        style="margin:2px auto 6px;font-size:clamp(0.92rem,2.3vw,1.1rem);color:#ffeab5">
+        Pick a festive color, then touch any section of the Rangoli to paint!
+      </p>
+      <div class="rangoli-palette" id="rangoliPalette" aria-label="Rangoli Colors"></div>
+      <div class="rangoli-controls">
+        <button class="rangoli-btn active" id="groupBtn" onclick="toggleGroupFill()">✨ Linked Color: ON</button>
+        <button class="rangoli-btn" onclick="magicFillRangoli()">Magic Fill 🪄</button>
+        <button class="rangoli-btn" onclick="resetRangoli()">Clear ↺</button>
+      </div>
+      <div class="rangoli-wrapper" id="rangoliWrapper">
+        <canvas id="rangoliCanvas" width="680" height="660" role="img" aria-label="Interactive Lord Shiva Rangoli Outline"></canvas>
+      </div>
+      <p class="small" id="rangoliStatus" style="margin:4px auto 8px;color:#f3d790">Touch any section of the Rangoli to paint with your chosen color.</p>
+      <button class="btn primary" onclick="go(3)">Continue to Dhanteras →</button>
+    </div>
+  </div>
+
+  <!-- Screen 3: Dhanteras -->
+  <div class="screen" id="s3">
+    <div class="panel">
+      <div class="kicker">First • Dhanteras</div>
+      <div class="orn">🪔 🪙 🌼</div>
+      <h2>Shubh Dhanteras, Ma’am</h2>
+      <p>May this Dhanteras bring you health, peace, prosperity, and many gentle reasons to smile.</p>
+      <textarea id="dhanterasMsg"
+        placeholder="Write your personal Dhanteras message here…">Ma’am, may Maa Lakshmi’s divine grace always be upon you. May She arrive in your life with abundant happiness, prosperity, and blessings, and may your days always be filled with joy, peace, and countless reasons to smile. May you always remain as happy and radiant as you are. ✨</textarea>
+      <button class="btn primary" onclick="go(4)">Continue to Lakshmi Puja →</button>
+    </div>
+  </div>
+
+  <!-- Screen 4: Lakshmi Puja -->
+  <div class="screen puja" id="s4">
+    <div id="petals"></div>
+    <div class="panel">
+      <div class="kicker">A moment of devotion • blessings & light</div>
+      <h2 style="margin-bottom:6px">Maa Lakshmi Puja</h2>
+
+      <div class="photo-row fixed-photos">
+        <div class="photo-box"><img class="fixed-photo" src="maa_lakshmi.jpg" alt="Maa Lakshmi" style="display:block">
+          <div class="photo-caption">॥ Maa Lakshmi ॥</div>
+        </div>
+        <div class="photo-box"><img class="fixed-photo" src="maam_photo.jpg" alt="Ma’am" style="display:block">
+          <div class="photo-caption">॥ Maa Laxmi ॥</div>
+        </div>
+      </div>
+
+      <div class="aarti-container" id="aartiContainer">
+        <div class="aarti-orbit" id="aartiOrbit">
+          <div class="aarti-sparkle-dot dot-t"></div>
+          <div class="aarti-sparkle-dot dot-r"></div>
+          <div class="aarti-sparkle-dot dot-b"></div>
+          <div class="aarti-sparkle-dot dot-l"></div>
+        </div>
+        <div class="aarti-thali-item" id="aartiThali" role="button" aria-label="Aarti Thali">
+          <img src="aarti_thali.png" alt="Devotional Brass Aarti Thali with Diya and Flowers">
+          <div class="diya-flame-pulsar"></div>
+        </div>
+      </div>
+
+      <div class="aarti-controls">
+        <div class="aarti-instruction" id="aartiInstruction">Hold & rotate the Aarti Thali clockwise 🪔</div>
+        <div class="aarti-meta-row">
+          <div class="aarti-progress-pill"><span id="aartiProgress">0%</span> complete</div>
+          <button class="aarti-auto-toggle active" id="aartiAutoBtn" onclick="toggleAutoAarti()">Pause Aarti ⏸</button>
+        </div>
+      </div>
+
+      <div class="audio-note" id="audioNote">॥ এসো মা লক্ষ্মী বসো ঘরে ॥ Sacred Lakshmi Puja devotional song is playing.
+      </div>
+      <button class="btn primary" id="afterAarti" onclick="go(5)">Receive blessings →</button>
+    </div>
+  </div>
+
+  <!-- Screen 5: Blessings -->
+  <div class="screen" id="s5">
+    <div class="panel">
+      <div class="kicker">Blessings of the festival</div>
+      <div class="orn">🪷 ✨ 🪷</div>
+      <h2>May Maa Lakshmi bless you</h2>
+      <p>May your home be filled with peace, your life with abundance, and every new beginning with hope and happiness.
+      </p>
+      <button class="btn primary" onclick="go(6)">A little festive treat →</button>
+    </div>
+  </div>
+
+  <!-- Screen 6: Scratch Treat -->
+  <div class="screen" id="s6">
+    <div class="panel">
+      <div class="kicker">A little Diwali treat</div>
+      <h2 style="margin:8px 0 10px">Scratch to reveal ✨</h2>
+      <div class="scratch" id="scratch">
+        <div class="under">
+          <img src="diwali_feast.jpg" alt="A grand Diwali feast and sweets for Ma’am" class="scratch-photo">
+        </div>
+        <canvas id="scratchCanvas"></canvas>
+      </div>
+      <button class="btn primary" onclick="go(7)">Let’s celebrate Diwali →</button>
+    </div>
+  </div>
+
+  <!-- Screen 7: Firecracker Rocket & Grand Fireworks -->
+  <div class="screen" id="s7">
+    <video class="finale-video" id="fireworksVideo" src="diwali_grand_fireworks.mp4" loop playsinline
+      preload="auto"></video>
+    <div class="finale-curtain" id="finaleCurtain"></div>
+    <div class="flash-blast" id="flashBlast"></div>
+
+    <!-- Rocket Launchpad Stage -->
+    <div class="rocket-stage" id="rocketStage">
+      <div class="rocket-header">
+        <div class="kicker">The festival of lights • grand celebration</div>
+        <div class="orn">✨ 🚀 ✨</div>
+        <h2>Launch the Diwali Rocket!</h2>
+        <p class="rocket-subtitle">Touch the rocket to shoot it into the night sky & light up the grand fireworks!</p>
+      </div>
+
+      <div class="rocket-scene">
+        <!-- The Interactive Diwali Rocket -->
+        <div class="rocket-interactive" id="rocketInteractive" onclick="launchRocket(event)" role="button"
+          aria-label="Touch the firecracker rocket to launch" tabindex="0">
+          <div class="rocket-assembly" id="rocketAssembly">
+            <!-- Nose cone -->
+            <div class="r-nose"></div>
+            <!-- Rocket cylinder -->
+            <div class="r-cylinder">
+              <div class="r-cap-gold"></div>
+              <div class="r-pattern">
+                <span class="r-text">DIWALI</span>
+                <span class="r-subtext">ROCKET</span>
+              </div>
+              <div class="r-stripes"></div>
+            </div>
+            <!-- Fins -->
+            <div class="r-fin left"></div>
+            <div class="r-fin right"></div>
+            <!-- Fuse & Spark -->
+            <div class="r-fuse-wrap">
+              <svg class="r-fuse-svg" viewBox="0 0 30 40">
+                <path d="M 15 0 Q 25 15 20 35" fill="none" stroke="#8d6e63" stroke-width="3" stroke-linecap="round" />
+              </svg>
+              <div class="r-spark" id="rSpark"></div>
+            </div>
+            <!-- Rocket Guide Stick -->
+            <div class="r-stick"></div>
+            <!-- Flame & Smoke Jet on Launch -->
+            <div class="r-exhaust" id="rExhaust">
+              <div class="r-exhaust-flame"></div>
+            </div>
+          </div>
+
+          <!-- Launch Bottle / Stand -->
+          <div class="r-bottle">
+            <div class="r-bottle-neck"></div>
+            <div class="r-bottle-body"></div>
+            <div class="r-bottle-base"></div>
+          </div>
+
+          <!-- Touch Hint Badge -->
+          <div class="rocket-hint-pill" id="rocketHintPill">
+            <span class="hint-hand">👆</span> Touch to Launch!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fireworks Celebration Panel (revealed after launch) -->
+    <div class="panel" id="fireworksPanel">
+      <div class="celebration-card">
+        <div class="kicker">The festival of lights • divine blessings</div>
+        <div class="orn">🙏 🪔 🙏</div>
+        <h2>Shubh Deepawali!</h2>
+        <p>May the blessings of Prabhu Shree Ram and Maa Lakshmi bring light, courage, peace, and happiness into every
+          step ahead.</p>
+        <p>Let the skies glow with the grand spirit of Diwali.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:12px 0">
+          <button class="btn primary" onclick="fireworks()">Celebrate with fireworks 🎆</button>
+          <button class="btn" onclick="resetRocketLaunch()">Launch another rocket 🚀</button>
+        </div>
+        <button class="btn primary" style="margin-top:10px" onclick="go(8)">Your Diwali wish →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 8: Personal Wish -->
+  <div class="screen" id="s8"><video class="finale-video" src="diwali_grand_fireworks.mp4" autoplay muted loop
+      playsinline preload="auto"></video>
+    <div class="panel">
+      <div class="kicker">With warmest wishes & respect</div>
+      <div class="orn">🪔 🌻 🪔</div>
+      <h1>Shubh Deepawali,<br>Ma’am!</h1>
+      <textarea id="diwaliMsg"
+        placeholder="Write your personal Diwali message here…">Ma’am, wishing you a Diwali filled with light, peace, happiness, and beautiful memories. May the coming year bring you success in everything you do and many moments that make you smile.Ma’am, just as the return of Prabhu Shree Ram filled Ayodhya with the light of countless diyas, may His divine presence always illuminate your heart and your life. May He fill your days with endless happiness, peace, and countless beautiful reasons to smile. And whenever life feels heavy, may His blessings gently ease your sorrows, replacing every sadness with hope, warmth, and joy. May your heart always remain as bright as Ayodhya on the night of His return. 🪔✨ Happy Diwali!</textarea>
+      <p style="color:#f7d17a;font-style:italic">With lots of respect,<br>Janak</p>
+      <button class="btn" onclick="go(0)">Replay the celebration ↺</button>
+      <footer>HAPPY DIWALI • LIGHT • PEACE • JOY</footer>
+    </div>
+  </div>
+
+  <script>
+    let bgMusic = document.getElementById('bgMusic');
+    let pujaMusic = document.getElementById('pujaMusic');
+    let isMuted = false;
+    let userHasInteracted = false;
+
+    function playBgMusic() {
+      if (isMuted) return;
+      pujaMusic.pause();
+      bgMusic.play().catch(() => { });
+    }
+
+    function playPujaMusic() {
+      if (isMuted) return;
+      bgMusic.pause();
+      pujaMusic.currentTime = 0;
+      pujaMusic.play().catch(() => { });
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      let btn = document.getElementById('musicToggle');
+      if (isMuted) {
+        bgMusic.pause();
+        pujaMusic.pause();
+        btn.innerHTML = '🔇 Music: Off';
+        btn.classList.add('muted');
+      } else {
+        btn.innerHTML = '🎵 Music: On';
+        btn.classList.remove('muted');
+        let active = document.querySelector('.screen.active');
+        if (active && active.id === 's4') {
+          pujaMusic.play().catch(() => { });
+        } else {
+          bgMusic.play().catch(() => { });
+        }
+      }
+    }
+
+    function go(n) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      let el = document.getElementById('s' + n);
+      if (el) el.classList.add('active');
+
+      userHasInteracted = true;
+      if (n === 4) {
+        // Lakshmi Puja screen: ONLY play eso-ma-lokkhi-boso-ghore.mp3
+        playPujaMusic();
+        startAarti();
+        startFlowers();
+      } else {
+        // All other screens: play alo-amar-alo-ogo.mp3
+        playBgMusic();
+      }
+
+      if (n === 2) {
+        setTimeout(() => {
+          if (typeof renderShivaCanvas === 'function') renderShivaCanvas();
+        }, 50);
+      }
+
+      if (n === 6) {
+        setTimeout(setupScratch, 60);
+      }
+
+      if (n === 7) {
+        setupRocketScreen();
+      }
+
+      if (n === 8) {
+        document.querySelectorAll('#s8 .finale-video').forEach(v => {
+          v.currentTime = 0;
+          v.play().catch(() => { });
+        });
+      }
+    }
+
+    const diyasLit = new Set();
+    function lightDiya(index) {
+      const el = document.querySelectorAll('.diya-touch')[index];
+      if (!el || diyasLit.has(index)) return;
+      diyasLit.add(index);
+      el.classList.add('lit');
+      el.setAttribute('aria-pressed', 'true');
+      document.getElementById('diyaCount').textContent = diyasLit.size + ' of 5 diyas lit';
+      if (diyasLit.size === 5) {
+        document.getElementById('diyaInstruction').textContent = 'All five diyas are glowing. Shubh Deepawali! ✨';
+        document.getElementById('continueDiyas').disabled = false;
+      }
+      if (!isMuted && bgMusic.paused) playBgMusic();
+    }
+
+    // Lord Shiva Rangoli Interactive Logic
+    const rangoliColors = [
+      { name: 'Shiva Blue', hex: '#00a2ed' },
+      { name: 'Ganga Cyan', hex: '#00c0f3' },
+      { name: 'Peacock Cyan', hex: '#00e5ff' },
+      { name: 'Royal Navy', hex: '#1a237e' },
+      { name: 'Haldi Yellow', hex: '#ffde17' },
+      { name: 'Golden Glow', hex: '#fed000' },
+      { name: 'Saffron Sun', hex: '#ff7700' },
+      { name: 'Damru Terracotta', hex: '#e85618' },
+      { name: 'Sindoor Red', hex: '#e53935' },
+      { name: 'Rani Magenta', hex: '#e21a8c' },
+      { name: 'Sacred Purple', hex: '#842b93' },
+      { name: 'Vasuki Green', hex: '#1b9e4a' },
+      { name: 'Parrot Green', hex: '#4caf50' },
+      { name: 'Rudraksha Bronze', hex: '#c67d0a' },
+      { name: 'Sacred White', hex: '#ffffff' },
+      { name: 'Midnight Black', hex: '#18181c' }
+    ];
+
+    let selectedColor = '#00a2ed';
+    let groupFillMode = true;
+    let isMagicFilled = false;
+    let shivaRegionsData = null;
+    let shivaOutlineImg = null;
+    let shivaColoredImg = null;
+    let shivaCanvasInitialized = false;
+    let shivaRegionFills = {}; // regionId -> {r, g, b}
+    const blankFillColor = { r: 20, g: 8, b: 34 }; // dark sacred chalkboard backdrop
+
+    const originalColorsHex = {
+      1: '#00a2ed',  // Shiva Neelkanth Blue (Skin)
+      2: '#18181c',  // Hair Locks
+      3: '#ffde17',  // Crescent Moon
+      4: '#00c0f3',  // Holy Ganga Waves
+      5: '#1b9e4a',  // Vasuki Serpent
+      6: '#fed000',  // Serpent Golden Belly
+      7: '#e85618',  // Damru Drum
+      8: '#ffe200',  // Halo Inner Ring
+      9: '#ff7700',  // Halo Outer Saffron
+      10: '#e21a8c', // Magenta Floral Petals
+      11: '#842b93', // Royal Purple Petals
+      12: '#c67d0a', // Rudraksha Garland
+      13: '#ffc700', // Kundal Earring & Gold
+      14: '#e53935'  // Tilak & Third Eye
+    };
+
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const num = parseInt(hex, 16);
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+
+    function initRangoliPalette() {
+      const container = document.getElementById('rangoliPalette');
+      if (!container) return;
+      container.innerHTML = '';
+      rangoliColors.forEach((c) => {
+        const btn = document.createElement('button');
+        btn.className = 'color-swatch' + (c.hex.toLowerCase() === selectedColor.toLowerCase() ? ' active' : '');
+        btn.style.backgroundColor = c.hex;
+        btn.style.setProperty('--swatch-color', c.hex);
+        btn.setAttribute('aria-label', c.name);
+        btn.title = c.name;
+        btn.onclick = () => selectColor(c.hex, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectColor(hex, btnEl) {
+      selectedColor = hex;
+      document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      const status = document.getElementById('rangoliStatus');
+      const cObj = rangoliColors.find(c => c.hex.toLowerCase() === hex.toLowerCase());
+      if (status) status.textContent = `Selected ${cObj ? cObj.name : 'color'}. Touch any part of Lord Shiva to paint!`;
+      if (!isMuted && bgMusic.paused) playBgMusic();
+    }
+
+    function initShivaRangoli() {
+      const canvas = document.getElementById('rangoliCanvas');
+      if (!canvas || shivaCanvasInitialized) return;
+      shivaCanvasInitialized = true;
+
+      shivaOutlineImg = new Image();
+      shivaOutlineImg.crossOrigin = 'anonymous';
+      shivaOutlineImg.src = 'shiva_outline_final.png';
+      shivaOutlineImg.onload = () => renderShivaCanvas();
+
+      shivaColoredImg = new Image();
+      shivaColoredImg.crossOrigin = 'anonymous';
+      shivaColoredImg.src = 'shiva_colored_final.png';
+
+      const regImg = new Image();
+      regImg.crossOrigin = 'anonymous';
+      regImg.src = 'shiva_regions.png';
+      regImg.onload = () => {
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = 680;
+        offCanvas.height = 660;
+        const offCtx = offCanvas.getContext('2d');
+        offCtx.drawImage(regImg, 0, 0);
+        shivaRegionsData = offCtx.getImageData(0, 0, 680, 660).data;
+        renderShivaCanvas();
+      };
+
+      canvas.addEventListener('pointerdown', handleShivaPointer);
+    }
+
+    function handleShivaPointer(e) {
+      const canvas = document.getElementById('rangoliCanvas');
+      if (!canvas || !shivaRegionsData) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = 680 / rect.width;
+      const scaleY = 660 / rect.height;
+      const x = Math.floor((e.clientX - rect.left) * scaleX);
+      const y = Math.floor((e.clientY - rect.top) * scaleY);
+
+      if (x < 0 || x >= 680 || y < 0 || y >= 660) return;
+
+      const idx = (y * 680 + x) * 4;
+      const reg = shivaRegionsData[idx];
+
+      if (reg > 0) {
+        if (typeof playTempleChime === 'function') playTempleChime();
+        if (!isMuted && bgMusic.paused) playBgMusic();
+
+        isMagicFilled = false;
+        const chosenRgb = hexToRgb(selectedColor);
+        shivaRegionFills[reg] = chosenRgb;
+
+        renderShivaCanvas();
+
+        const names = {
+          1: 'Lord Shiva',
+          2: 'Sacred Hair Jata',
+          3: 'Crescent Moon Chandrama',
+          4: 'Holy Ganga Waters',
+          5: 'Vasuki Serpent',
+          6: 'Serpent Belly',
+          7: 'Sacred Damru',
+          8: 'Inner Solar Halo',
+          9: 'Outer Saffron Halo',
+          10: 'Lotus Petals',
+          11: 'Divine Purple Rays',
+          12: 'Rudraksha Mala',
+          13: 'Golden Ornaments',
+          14: 'Sacred Tilak'
+        };
+        const status = document.getElementById('rangoliStatus');
+        if (status) {
+          status.textContent = `✨ Painted ${names[reg] || 'section'}! Keep coloring or continue to Dhanteras.`;
+        }
+      }
+    }
+
+    function renderShivaCanvas() {
+      const canvas = document.getElementById('rangoliCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      if (isMagicFilled && shivaColoredImg && shivaColoredImg.complete) {
+        ctx.fillStyle = '#140822';
+        ctx.fillRect(0, 0, 680, 660);
+        ctx.drawImage(shivaColoredImg, 0, 0);
+        if (shivaOutlineImg && shivaOutlineImg.complete) {
+          ctx.drawImage(shivaOutlineImg, 0, 0);
+        }
+        return;
+      }
+
+      if (shivaRegionsData) {
+        const imgData = ctx.createImageData(680, 660);
+        const data = imgData.data;
+        const fills = shivaRegionFills;
+        const defaultBlank = blankFillColor;
+
+        for (let i = 0; i < 680 * 660; i++) {
+          const reg = shivaRegionsData[i * 4];
+          if (reg > 0) {
+            const col = fills[reg] || defaultBlank;
+            data[i * 4] = col.r;
+            data[i * 4 + 1] = col.g;
+            data[i * 4 + 2] = col.b;
+            data[i * 4 + 3] = 255;
+          } else {
+            data[i * 4 + 3] = 0;
+          }
+        }
+        ctx.putImageData(imgData, 0, 0);
+      } else {
+        ctx.fillStyle = '#140822';
+        ctx.fillRect(0, 0, 680, 660);
+      }
+
+      if (shivaOutlineImg && shivaOutlineImg.complete) {
+        ctx.drawImage(shivaOutlineImg, 0, 0);
+      }
+    }
+
+    function toggleGroupFill() {
+      groupFillMode = !groupFillMode;
+      const btn = document.getElementById('groupBtn');
+      if (btn) {
+        btn.textContent = groupFillMode ? '✨ Linked Color: ON' : '✨ Linked Color: OFF';
+        btn.classList.toggle('active', groupFillMode);
+      }
+      const status = document.getElementById('rangoliStatus');
+      if (status) {
+        status.textContent = groupFillMode
+          ? '✨ Linked Color ON: Related rangoli parts will paint together.'
+          : 'Linked Color OFF: Paint individual sections.';
+      }
+    }
+
+    function magicFillRangoli() {
+      isMagicFilled = true;
+      Object.keys(originalColorsHex).forEach(k => {
+        shivaRegionFills[k] = hexToRgb(originalColorsHex[k]);
+      });
+      renderShivaCanvas();
+      if (typeof playTempleChime === 'function') playTempleChime();
+      const status = document.getElementById('rangoliStatus');
+      if (status) {
+        status.textContent = '✨ Magic Fill! Lord Shiva’s original authentic rangoli colors filled!';
+      }
+    }
+
+    function resetRangoli() {
+      isMagicFilled = false;
+      shivaRegionFills = {};
+      renderShivaCanvas();
+      if (typeof playTempleChime === 'function') playTempleChime();
+      const status = document.getElementById('rangoliStatus');
+      if (status) {
+        status.textContent = 'Rangoli cleared to blank chalk outline. Choose a color and touch to paint!';
+      }
+    }
+
+    // Web Audio Synthesizer for Authentic Temple Chimes & Rocket Launch
+    const audioCtx = (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined')
+      ? new (window.AudioContext || window.webkitAudioContext)()
+      : null;
+
+    function playSizzleSound() {
+      if (isMuted || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      try {
+        const bufferSize = Math.floor(audioCtx.sampleRate * 0.32);
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.65));
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 3400;
+        filter.Q.value = 3.5;
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.32);
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+        noise.start();
+      } catch (_) { }
+    }
+
+    function playRocketWhooshSound() {
+      if (isMuted || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1250, audioCtx.currentTime + 0.95);
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(350, audioCtx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(3600, audioCtx.currentTime + 0.95);
+
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.38, audioCtx.currentTime + 0.7);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.0);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.0);
+      } catch (_) { }
+    }
+
+    function playBoomSound() {
+      if (isMuted || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(170, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(28, audioCtx.currentTime + 0.75);
+
+        gain.gain.setValueAtTime(0.7, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.85);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.85);
+
+        const bufSize = Math.floor(audioCtx.sampleRate * 0.45);
+        const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) {
+          d[i] = (Math.random() * 2 - 1) * (1 - i / bufSize);
+        }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buf;
+        const ngain = audioCtx.createGain();
+        ngain.gain.setValueAtTime(0.45, audioCtx.currentTime);
+        ngain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.45);
+        noise.connect(ngain);
+        ngain.connect(audioCtx.destination);
+        noise.start();
+      } catch (_) { }
+    }
+
+    function playTempleChime() {
+      if (isMuted || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1175, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.16, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.3);
+      } catch (_) { }
+    }
+
+    // Interactive Aarti Orbit & Drag Logic
+    let aartiStarted = false;
+    let aartiAngle = Math.PI / 2; // starts at bottom of orbit
+    let aartiAuto = true;
+    let aartiDragging = false;
+    let aartiAccumAngle = 0;
+    let aartiProgress = 0;
+    let aartiCompleted = false;
+    let aartiLastChimeAngle = 0;
+    let aartiAnimId = null;
+    let aartiLastPointerAngle = 0;
+
+    function initAarti() {
+      const container = document.getElementById('aartiContainer');
+      const thali = document.getElementById('aartiThali');
+      if (!container || !thali) return;
+
+      function updateThaliPos(angle) {
+        const w = container.clientWidth || 320;
+        const h = container.clientHeight || 200;
+        const rx = Math.max(70, Math.min(125, w * 0.38));
+        const ry = Math.max(45, Math.min(70, h * 0.34));
+
+        const x = Math.cos(angle) * rx;
+        const y = Math.sin(angle) * ry;
+        const tilt = Math.sin(angle) * 7.5;
+
+        thali.style.transform = `translate(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px)) rotate(${tilt.toFixed(1)}deg)`;
+      }
+
+      function onPointerDown(e) {
+        aartiDragging = true;
+        try { container.setPointerCapture(e.pointerId); } catch (_) { }
+        const rect = container.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        aartiLastPointerAngle = Math.atan2(e.clientY - cy, e.clientX - cx);
+        aartiAuto = false;
+        updateAutoBtnUI();
+        if (!isMuted && pujaMusic.paused) playPujaMusic();
+      }
+
+      function onPointerMove(e) {
+        if (!aartiDragging) return;
+        const rect = container.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const curAngle = Math.atan2(e.clientY - cy, e.clientX - cx);
+        let delta = curAngle - aartiLastPointerAngle;
+        if (delta < -Math.PI) delta += Math.PI * 2;
+        if (delta > Math.PI) delta -= Math.PI * 2;
+
+        aartiAngle += delta;
+        aartiLastPointerAngle = curAngle;
+
+        if (delta > 0) {
+          aartiAccumAngle += delta;
+          updateAartiProgress();
+        }
+        updateThaliPos(aartiAngle);
+        if (Math.random() < 0.45) {
+          spawnAartiSpark(container, aartiAngle);
+        }
+      }
+
+      function onPointerUp() {
+        aartiDragging = false;
+      }
+
+      container.addEventListener('pointerdown', onPointerDown);
+      container.addEventListener('pointermove', onPointerMove);
+      container.addEventListener('pointerup', onPointerUp);
+      container.addEventListener('pointercancel', onPointerUp);
+
+      function aartiLoop() {
+        if (aartiAuto && !aartiDragging) {
+          aartiAngle += 0.022;
+          aartiAccumAngle += 0.022;
+          updateAartiProgress();
+          updateThaliPos(aartiAngle);
+          if (Math.random() < 0.25) {
+            spawnAartiSpark(container, aartiAngle);
+          }
+        }
+        aartiAnimId = requestAnimationFrame(aartiLoop);
+      }
+      if (!aartiAnimId) aartiLoop();
+      updateThaliPos(aartiAngle);
+    }
+
+    function updateAartiProgress() {
+      const pct = Math.min(100, Math.floor((aartiAccumAngle / (Math.PI * 2)) * 100));
+      if (pct !== aartiProgress) {
+        aartiProgress = pct;
+        const progEl = document.getElementById('aartiProgress');
+        if (progEl) progEl.textContent = pct + '%';
+
+        if (aartiAccumAngle - aartiLastChimeAngle >= Math.PI / 2) {
+          aartiLastChimeAngle = aartiAccumAngle;
+          playTempleChime();
+        }
+
+        if (pct >= 100 && !aartiCompleted) {
+          aartiCompleted = true;
+          onAartiComplete();
+        }
+      }
+    }
+
+    function onAartiComplete() {
+      const instr = document.getElementById('aartiInstruction');
+      if (instr) {
+        instr.innerHTML = '✨ Aarti complete! Maa Lakshmi blesses you with peace & joy.';
+        instr.style.color = '#ffd76a';
+      }
+      startFlowers();
+      playTempleChime();
+      const btn = document.getElementById('afterAarti');
+      if (btn) {
+        btn.classList.add('glow-pulse');
+        btn.innerHTML = 'Receive blessings ✨ →';
+      }
+    }
+
+    function toggleAutoAarti() {
+      aartiAuto = !aartiAuto;
+      updateAutoBtnUI();
+    }
+
+    function updateAutoBtnUI() {
+      const btn = document.getElementById('aartiAutoBtn');
+      if (btn) {
+        btn.textContent = aartiAuto ? 'Pause Aarti ⏸' : 'Auto Aarti ↺';
+        if (aartiAuto) btn.classList.add('active');
+        else btn.classList.remove('active');
+      }
+    }
+
+    function spawnAartiSpark(container, angle) {
+      const w = container.clientWidth || 320;
+      const h = container.clientHeight || 200;
+      const rx = Math.max(70, Math.min(125, w * 0.38));
+      const ry = Math.max(45, Math.min(70, h * 0.34));
+      const x = container.clientWidth / 2 + Math.cos(angle) * rx + (Math.random() * 14 - 7);
+      const y = container.clientHeight / 2 + Math.sin(angle) * ry - 20 + (Math.random() * 10 - 5);
+
+      const spark = document.createElement('div');
+      spark.className = 'aarti-spark-particle';
+      spark.style.left = x + 'px';
+      spark.style.top = y + 'px';
+      container.appendChild(spark);
+      setTimeout(() => spark.remove(), 600);
+    }
+
+    function startAarti() {
+      aartiStarted = true;
+      playPujaMusic();
+    }
+
+    // Rocket Launch & Fireworks Finale
+    let rocketLaunching = false;
+
+    function setupRocketScreen() {
+      const video = document.getElementById('fireworksVideo');
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+      const s7 = document.getElementById('s7');
+      if (s7) s7.classList.remove('video-active');
+
+      const stage = document.getElementById('rocketStage');
+      if (stage) {
+        stage.style.display = 'flex';
+        stage.style.opacity = '1';
+        stage.style.pointerEvents = 'auto';
+      }
+      const panel = document.getElementById('fireworksPanel');
+      if (panel) {
+        panel.classList.remove('visible');
+      }
+      resetRocketAssembly();
+    }
+
+    function resetRocketAssembly() {
+      rocketLaunching = false;
+      const assembly = document.getElementById('rocketAssembly');
+      const exhaust = document.getElementById('rExhaust');
+      const hint = document.getElementById('rocketHintPill');
+      const spark = document.getElementById('rSpark');
+      if (assembly) {
+        assembly.classList.remove('vibrating', 'launched');
+        assembly.style.transform = '';
+      }
+      if (exhaust) exhaust.style.display = 'none';
+      if (hint) hint.style.display = 'flex';
+      if (spark) spark.style.animation = 'sparkPulse 0.15s ease-in-out infinite alternate';
+    }
+
+    function launchRocket(e) {
+      if (e) e.stopPropagation();
+      if (rocketLaunching) return;
+      rocketLaunching = true;
+
+      const assembly = document.getElementById('rocketAssembly');
+      const exhaust = document.getElementById('rExhaust');
+      const hint = document.getElementById('rocketHintPill');
+      const spark = document.getElementById('rSpark');
+
+      if (hint) hint.style.display = 'none';
+      if (assembly) assembly.classList.add('vibrating');
+
+      // Spark fuse sizzle
+      playSizzleSound();
+      if (spark) {
+        spark.style.animation = 'sparkFierce 0.08s infinite alternate';
+      }
+
+      // 280ms charge-up -> ignition & ascent
+      setTimeout(() => {
+        if (exhaust) exhaust.style.display = 'flex';
+        if (assembly) {
+          assembly.classList.remove('vibrating');
+          assembly.classList.add('launched');
+        }
+        playRocketWhooshSound();
+        createRocketTrail();
+
+        // 950ms -> Sky explosion burst & video transition
+        setTimeout(() => {
+          triggerRocketExplosion();
+        }, 950);
+      }, 280);
+    }
+
+    function createRocketTrail() {
+      let count = 0;
+      const interval = setInterval(() => {
+        count++;
+        if (count > 16 || !rocketLaunching) {
+          clearInterval(interval);
+          return;
+        }
+        const interactive = document.getElementById('rocketInteractive');
+        if (!interactive) return;
+        const rect = interactive.getBoundingClientRect();
+        const smoke = document.createElement('div');
+        smoke.className = 'rocket-exhaust-ember';
+        smoke.style.left = (rect.left + rect.width / 2 + (Math.random() * 16 - 8)) + 'px';
+        smoke.style.top = (rect.bottom - 110 - (count * 15)) + 'px';
+        document.body.appendChild(smoke);
+        setTimeout(() => smoke.remove(), 700);
+      }, 45);
+    }
+
+    function triggerRocketExplosion() {
+      playBoomSound();
+
+      const flash = document.getElementById('flashBlast');
+      if (flash) {
+        flash.classList.add('active');
+        setTimeout(() => flash.classList.remove('active'), 200);
+      }
+
+      fireworks();
+
+      const video = document.getElementById('fireworksVideo');
+      const s7 = document.getElementById('s7');
+      if (video) {
+        video.currentTime = 0;
+        video.play().catch(() => { });
+      }
+      if (s7) s7.classList.add('video-active');
+
+      const stage = document.getElementById('rocketStage');
+      if (stage) {
+        stage.style.opacity = '0';
+        stage.style.pointerEvents = 'none';
+        setTimeout(() => { stage.style.display = 'none'; }, 800);
+      }
+
+      const panel = document.getElementById('fireworksPanel');
+      if (panel) {
+        panel.classList.add('visible');
+      }
+    }
+
+    function resetRocketLaunch() {
+      setupRocketScreen();
+    }
+
+    // Fireworks
+    function fireworks() {
+      const fx = document.getElementById('fx'), c = fx.getContext('2d');
+      fx.width = innerWidth;
+      fx.height = innerHeight;
+      let particles = [], rockets = [], launches = 0;
+      const colors = ['#ffd76a', '#ff4d75', '#ff9b45', '#7deaff', '#d7a0ff', '#fff5d6', '#8dffb2'];
+      function burst(x, y, color, grand = false) {
+        const n = grand ? 190 : 120;
+        for (let i = 0; i < n; i++) {
+          let ang = Math.random() * Math.PI * 2, sp = (grand ? 2.5 : 1.5) + Math.random() * (grand ? 7 : 5);
+          particles.push({ x, y, px: x, py: y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 65 + Math.random() * 65, max: 130, color, size: .8 + Math.random() * 2.3, gravity: .025 + Math.random() * .04 });
+        }
+      }
+      function launch() {
+        if (launches++ >= 15) return;
+        let x = fx.width * (.1 + Math.random() * .8), ty = fx.height * (.12 + Math.random() * .5), col = colors[Math.floor(Math.random() * colors.length)];
+        rockets.push({ x, y: fx.height + 5, ty, v: 5 + Math.random() * 3, color: col });
+        setTimeout(launch, 240 + Math.random() * 480);
+      }
+      launch();
+      function tick() {
+        c.globalCompositeOperation = 'destination-out';
+        c.fillStyle = 'rgba(0, 0, 0, 0.18)';
+        c.fillRect(0, 0, fx.width, fx.height);
+        c.globalCompositeOperation = 'source-over';
+        rockets = rockets.filter(r => {
+          r.y -= r.v;
+          c.strokeStyle = r.color;
+          c.lineWidth = 2;
+          c.globalAlpha = .8;
+          c.beginPath();
+          c.moveTo(r.x, r.y + 22);
+          c.lineTo(r.x, r.y);
+          c.stroke();
+          if (r.y < r.ty) {
+            burst(r.x, r.y, r.color, Math.random() < .45);
+            return false;
+          }
+          return true;
+        });
+        particles = particles.filter(p => {
+          p.px = p.x; p.py = p.y;
+          p.x += p.vx; p.y += p.vy;
+          p.vy += p.gravity; p.vx *= .986;
+          p.life--;
+          c.globalAlpha = Math.max(0, p.life / p.max);
+          c.strokeStyle = p.color;
+          c.lineWidth = p.size;
+          c.beginPath();
+          c.moveTo(p.px, p.py);
+          c.lineTo(p.x, p.y);
+          c.stroke();
+          return p.life > 0;
+        });
+        c.globalAlpha = 1;
+        if (rockets.length || particles.length || launches <= 15) requestAnimationFrame(tick);
+        else setTimeout(() => c.clearRect(0, 0, fx.width, fx.height), 1500);
+      }
+      tick();
+    }
+
+    // Stars background
+    let sc = document.getElementById('stars'), ctx = sc.getContext('2d'), stars = [];
+    function resize() {
+      sc.width = innerWidth; sc.height = innerHeight;
+      stars = Array.from({ length: 120 }, () => ({ x: Math.random() * sc.width, y: Math.random() * sc.height, r: .3 + Math.random() * 1.5, p: Math.random() * 6 }));
+    }
+    function draw() {
+      ctx.clearRect(0, 0, sc.width, sc.height);
+      stars.forEach(s => {
+        s.p += .02;
+        ctx.globalAlpha = .15 + .6 * (Math.sin(s.p) + 1) / 2;
+        ctx.fillStyle = '#ffe7ac';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(draw);
+    }
+    resize(); draw(); addEventListener('resize', resize);
+
+    // Flower Petals for Lakshmi Puja
+    let flowersStarted = false;
+    function startFlowers() {
+      if (flowersStarted) return;
+      flowersStarted = true;
+      let root = document.getElementById('petals');
+      if (!root) return;
+      for (let i = 0; i < 90; i++) {
+        let p = document.createElement('span');
+        p.className = 'petal';
+        p.textContent = ['🌺', '🌸', '🌼', '🪷'][Math.floor(Math.random() * 4)];
+        p.style.left = (Math.random() * 100) + '%';
+        p.style.animationDuration = (3.5 + Math.random() * 4.5) + 's';
+        p.style.animationDelay = (Math.random() * 2) + 's';
+        p.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+        root.appendChild(p);
+        setTimeout(() => p.remove(), 9000);
+      }
+    }
+
+    // Scratch Card
+    let canvas = document.getElementById('scratchCanvas'), cc = canvas.getContext('2d'), scratching = false;
+    let scratchReady = false;
+    function setupScratch() {
+      let r = canvas.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) return;
+      scratchReady = true;
+      canvas.width = r.width * devicePixelRatio;
+      canvas.height = r.height * devicePixelRatio;
+      cc.scale(devicePixelRatio, devicePixelRatio);
+
+      let grad = cc.createLinearGradient(0, 0, r.width, r.height);
+      grad.addColorStop(0, '#9c6724');
+      grad.addColorStop(0.3, '#f5d67f');
+      grad.addColorStop(0.7, '#8f4f1d');
+      grad.addColorStop(1, '#e8be63');
+      cc.fillStyle = grad;
+      cc.fillRect(0, 0, r.width, r.height);
+
+      cc.fillStyle = '#220e28';
+      let fontSize = Math.max(15, Math.min(22, r.width * 0.05));
+      cc.font = 'bold ' + fontSize + 'px Georgia, serif';
+      cc.textAlign = 'center';
+      cc.textBaseline = 'middle';
+      cc.shadowColor = '#ffeaa7';
+      cc.shadowBlur = 8;
+      cc.fillText('✨ SCRATCH HERE ✨', r.width / 2, r.height / 2);
+      cc.shadowBlur = 0;
+      cc.globalCompositeOperation = 'destination-out';
+    }
+    setupScratch();
+
+    function scratch(e) {
+      if (!scratching) return;
+      let r = canvas.getBoundingClientRect();
+      let x = (e.clientX - r.left), y = (e.clientY - r.top);
+      let brushRadius = Math.max(24, Math.min(36, r.width * 0.065));
+      cc.beginPath();
+      cc.arc(x, y, brushRadius, 0, Math.PI * 2);
+      cc.fill();
+    }
+    canvas.addEventListener('pointerdown', e => { scratching = true; canvas.setPointerCapture(e.pointerId); scratch(e); });
+    canvas.addEventListener('pointermove', scratch);
+    canvas.addEventListener('pointerup', () => scratching = false);
+    canvas.addEventListener('pointercancel', () => scratching = false);
+
+    // Init on load
+    initRangoliPalette();
+    initShivaRangoli();
+    initAarti();
+    setupRocketScreen();
+
+    const params = new URLSearchParams(window.location.search);
+    const screenParam = params.get('s') || window.location.hash.replace('#s', '').replace('#', '');
+    if (screenParam !== null && screenParam !== '' && !isNaN(parseInt(screenParam, 10))) {
+      go(parseInt(screenParam, 10));
+    }
+  </script>
+</body>
+
+</html>

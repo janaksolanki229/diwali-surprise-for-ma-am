@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>A Diwali Surprise for Ma'am</title>
+  <style>
+    :root {
+      --gold: #f7d17a;
+      --cream: #fff2d8;
+      --pink: #e8a9bf;
+      --purple: #180c30;
+      --wine: #35113d
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      background: #09071b;
+      color: var(--cream);
+      font-family: Georgia, 'Times New Roman', serif;
+      overflow: hidden
+    }
+
+    #bg {
+      position: fixed;
+      inset: 0;
+      background: url("diwali_background.jpeg") center center / cover no-repeat;
+      z-index: -3
+    }
+
+    #stars,
+    #fx {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100svh;
+      min-height: 100svh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(10px, 2vw, 24px);
+      overflow: auto;
+      background: radial-gradient(ellipse at 50% 40%, #4b235b 0%, #211033 48%, #080719 100%)
+    }
+
+    .screen.active {
+      display: flex;
+      animation: fade .25s ease
+    }
+
+    .panel {
+      width: 100%;
+      height: 100%;
+      min-height: calc(100svh - 20px);
+      max-width: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: clamp(16px, 4vw, 48px);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      position: relative;
+      overflow-y: auto
+    }
+
+    .screen .panel>* {
+      max-width: min(900px, 100%)
+    }
+
+    .kicker {
+      font: 11px/1.5 Arial, sans-serif;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--gold)
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 8vw, 5.5rem);
+      font-weight: normal;
+      line-height: 1.04;
+      margin: 16px 0;
+      color: var(--gold);
+      text-shadow: 0 0 28px #ffca6755
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 6vw, 3.5rem);
+      font-weight: normal;
+      color: var(--gold);
+      margin: 12px 0 20px
+    }
+
+    p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      line-height: 1.8;
+      color: #ffefd9;
+      margin: 14px auto;
+      max-width: 700px
+    }
+
+    .small {
+      font-size: .9rem;
+      color: #d9c6e2
+    }
+
+    .orn {
+      font-size: clamp(30px, 7vw, 55px);
+      margin: 16px
+    }
+
+    .btn {
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      background: #f7d17a12;
+      border-radius: 999px;
+      padding: 13px 22px;
+      font: 13px Arial, sans-serif;
+      letter-spacing: .08em;
+      cursor: pointer;
+      margin: 10px 5px;
+      transition: .25s
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #f7d17a26;
+      box-shadow: 0 0 20px #f7d17a20
+    }
+
+    .btn.primary {
+      background: linear-gradient(120deg, #9c6724, #e8bd61);
+      color: #24102e;
+      border: 0
+    }
+
+    textarea {
+      display: block;
+      width: min(650px, 100%);
+      margin: 18px auto;
+      padding: 14px;
+      border-radius: 14px;
+      background: #120921aa;
+      border: 1px solid #f7d17a66;
+      color: #fff0d8;
+      font: 16px Georgia;
+      line-height: 1.5;
+      resize: vertical;
+      min-height: 100px
+    }
+
+    .photo-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 20px auto
+    }
+
+    .photo-box {
+      width: min(37vw, 230px);
+      height: min(42vw, 260px);
+      min-width: 140px;
+      min-height: 170px;
+      border: 1px solid #f7d17a88;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(160deg, #5c2a5d, #1b0d30);
+      display: grid;
+      place-items: center;
+      position: relative;
+      box-shadow: 0 0 30px #f7d17a16
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none
+    }
+
+    .photo-box .placeholder {
+      padding: 15px;
+      color: #f8d98e;
+      font-size: 14px
+    }
+
+    .photo-box label {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: #120921d9;
+      border: 1px solid #f7d17a77;
+      border-radius: 12px;
+      padding: 9px;
+      font: 11px Arial, sans-serif;
+      color: #ffe4a3;
+      cursor: pointer
+    }
+
+    .photo-box input {
+      display: none
+    }
+
+    .puja {
+      background: radial-gradient(ellipse at center, #54275d 0, #25113c 48%, #09071b 100%)
+    }
+
+    .puja .panel {
+      max-width: 980px;
+      overflow: hidden
+    }
+
+    #petals {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 2
+    }
+
+    .petal {
+      position: absolute;
+      top: -40px;
+      font-size: 22px;
+      animation: petalFall linear forwards;
+      filter: drop-shadow(0 0 7px #ff4568)
+    }
+
+    @keyframes petalFall {
+      to {
+        transform: translate3d(var(--drift), 110vh, 0) rotate(720deg);
+        opacity: .1
+      }
+    }
+
+    .offer {
+      height: 92px;
+      position: relative;
+      margin: 8px auto 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: 1.2s
+    }
+
+    .offer.show {
+      opacity: 1;
+      transform: none
+    }
+
+    .hand {
+      font-size: 50px;
+      display: inline-block;
+      animation: offer 2.3s ease-in-out infinite
+    }
+
+    .sunflower {
+      font-size: 52px;
+      margin-left: -5px;
+      display: inline-block;
+      filter: drop-shadow(0 0 14px #ffc84b);
+      animation: flowerGlow 1.7s alternate infinite
+    }
+
+    @keyframes offer {
+
+      0%,
+      100% {
+        transform: translateX(-12px) rotate(-5deg)
+      }
+
+      50% {
+        transform: translateX(12px) rotate(4deg)
+      }
+    }
+
+    @keyframes flowerGlow {
+      to {
+        filter: drop-shadow(0 0 22px #ffdd68);
+        transform: scale(1.08)
+      }
+    }
+
+    .aarti-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 18px auto;
+      height: 110px
+    }
+
+    .thali {
+      font-size: 62px;
+      filter: drop-shadow(0 0 16px #ffc85a);
+      animation: rotateThali 5s linear infinite;
+      transform-origin: center
+    }
+
+    @keyframes rotateThali {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .audio-note {
+      font: 12px Arial, sans-serif;
+      color: #d9c6e2;
+      margin: 10px
+    }
+
+    .scratch {
+      width: min(580px, 92vw);
+      aspect-ratio: 1024 / 558;
+      max-height: min(340px, 48vh);
+      margin: 16px auto;
+      border: 2px solid #f7d17abb;
+      border-radius: 22px;
+      position: relative;
+      overflow: hidden;
+      background: #150926;
+      box-shadow: 0 0 35px rgba(247, 209, 122, 0.3), 0 10px 32px rgba(0, 0, 0, 0.8);
+      touch-action: none
+    }
+
+    .scratch .under {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden
+    }
+
+    .scratch-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .scratch canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      touch-action: none
+    }
+
+    .fireworks {
+      font-size: clamp(2rem, 8vw, 5rem);
+      letter-spacing: .2em;
+      animation: pop .8s ease infinite alternate
+    }
+
+    @keyframes pop {
+      to {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 25px #ffd96a)
+      }
+    }
+
+    footer {
+      font: 10px Arial, sans-serif;
+      letter-spacing: .2em;
+      color: #c7b4d4;
+      margin-top: 24px
+    }
+
+    @keyframes fade {
+      from {
+        opacity: .4;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+
+    #s7,
+    #s8 {
+      background: #05040d;
+      isolation: isolate
+    }
+
+    #s7 .finale-video,
+    #s8 .finale-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2
+    }
+
+    #s7:after,
+    #s8:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #05040d66 0%, #07040b20 38%, #07040b99 100%);
+      z-index: -1;
+      pointer-events: none
+    }
+
+    #s7 .panel,
+    #s8 .panel {
+      min-height: 100svh;
+      justify-content: center
+    }
+
+    #s7 .kicker,
+    #s8 .kicker {
+      color: #ffe6a4;
+      text-shadow: 0 2px 12px #000
+    }
+
+    #s7 h2,
+    #s8 h1 {
+      color: #fff2cf;
+      text-shadow: 0 0 18px #ffbd5a, 0 0 45px #ff3e5e, 0 3px 16px #000;
+      font-size: clamp(2.6rem, 10vw, 6.4rem)
+    }
+
+    #s7 p,
+    #s8 p {
+      color: #fff8ed;
+      text-shadow: 0 2px 12px #000;
+      font-size: clamp(1rem, 3vw, 1.35rem)
+    }
+
+    #s7 .btn,
+    #s8 .btn {
+      background: #180c30a8;
+      backdrop-filter: blur(5px);
+      border-color: #ffe19a;
+      color: #ffe8b0
+    }
+
+    #s7 .fireworks {
+      font-size: clamp(1.8rem, 7vw, 5rem);
+      letter-spacing: .03em;
+      color: #fff2c4;
+      text-shadow: 0 0 20px #ffb94c
+    }
+
+
+    #s0 {
+      background: radial-gradient(ellipse at 50% 30%, #301438 0%, #170b24 55%, #090614 100%) !important;
+      isolation: isolate
+    }
+
+    #s0.active {
+      animation: none;
+      display: flex
+    }
+
+    #s0 .panel {
+      min-height: 100svh;
+      justify-content: center;
+      position: relative
+    }
+
+    #s0 .ram-opening h1 {
+      letter-spacing: .025em;
+      text-shadow: 0 0 24px #ff9e3d, 0 0 55px #a43d16, 0 3px 14px #000
+    }
+
+    #s0 .ram-opening .kicker,
+    #s0 .ram-opening footer {
+      color: #ffd98b;
+      text-shadow: 0 2px 10px #000
+    }
+
+    .ram-photo-card {
+      margin: 14px auto;
+      width: min(92vw, 640px);
+      display: flex;
+      justify-content: center
+    }
+
+    .ram-photo-frame {
+      position: relative;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid #f7d17abb;
+      box-shadow: 0 0 35px rgba(247, 209, 122, 0.35), 0 12px 36px rgba(0, 0, 0, 0.85);
+      background: linear-gradient(160deg, #3d1b46, #140924);
+      transition: transform .3s ease, box-shadow .3s ease
+    }
+
+    .ram-photo-frame:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 45px rgba(247, 209, 122, 0.48), 0 16px 42px rgba(0, 0, 0, 0.9)
+    }
+
+    .ram-photo-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: min(46vh, 360px);
+      object-fit: cover;
+      object-position: center 20%
+    }
+
+    .ram-photo-frame .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(0deg, rgba(14, 7, 26, 0.95) 0%, rgba(14, 7, 26, 0.75) 75%, transparent 100%);
+      border-top: 1px solid rgba(247, 209, 122, 0.35);
+      padding: 10px 14px 8px;
+      font: 13px Georgia, serif;
+      letter-spacing: .06em;
+      color: #ffe5a3;
+      text-shadow: 0 2px 8px #000
+    }
+
+    #bg:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #05061155 0%, #08051188 55%, #08051166 100%);
+      pointer-events: none
+    }
+
+    .screen {
+      background: transparent
+    }
+
+    .puja {
+      background: transparent
+    }
+
+    .fixed-photos .photo-box {
+      overflow: hidden
+    }
+
+    .fixed-photos .fixed-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .fixed-photos .photo-caption {
+      position: absolute;
+      bottom: 7px;
+      left: 7px;
+      right: 7px;
+      padding: 7px 8px;
+      background: #120921d9;
+      border: 1px solid #f7d17a77;
+      border-radius: 10px;
+      color: #ffe4a3;
+      font: 11px Arial, sans-serif;
+      letter-spacing: .04em
+    }
+
+    .aarti-wrap {
+      height: 190px
+    }
+
+    .thali {
+      position: relative;
+      width: 176px;
+      height: 176px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle, #a95820 0%, #e7b75c 38%, #8a3e19 58%, #f4cf7d 64%, #7a3519 71%, #d9a64d 78%, #451b22 85%, transparent 86%);
+      border: 5px ridge #f5d27c;
+      box-shadow: 0 0 28px #ffbd4c99, inset 0 0 18px #ffe7a2;
+      animation: rotateThali 5s linear infinite;
+      transform-origin: center
+    }
+
+    .thali-ring {
+      position: absolute;
+      inset: 15px;
+      border: 2px dotted #ffedb4;
+      border-radius: 50%;
+      box-shadow: inset 0 0 9px #ffd36a
+    }
+
+    .thali-flower {
+      position: absolute;
+      font-size: 25px;
+      filter: drop-shadow(0 0 5px #ffca58)
+    }
+
+    .thali-flower.f1 {
+      top: 20px;
+      left: 45px
+    }
+
+    .thali-flower.f2 {
+      top: 48px;
+      right: 18px
+    }
+
+    .thali-flower.f3 {
+      bottom: 24px;
+      right: 42px
+    }
+
+    .thali-flower.f4 {
+      bottom: 48px;
+      left: 17px
+    }
+
+    .thali-diya {
+      font-size: 57px;
+      filter: drop-shadow(0 0 16px #ffdc75);
+      z-index: 1
+    }
+
+    #s4 #afterAarti {
+      display: inline-block !important;
+      margin: 14px auto 24px;
+      position: relative;
+      z-index: 4
+    }
+
+    #s4 .aarti-wrap {
+      margin: 12px auto
+    }
+
+    #s4 .audio-note {
+      max-width: 90%;
+      text-align: center
+    }
+
+    .diya-page {
+      background: transparent !important
+    }
+
+    .five-diyas {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(8px, 2.4vw, 28px);
+      flex-wrap: wrap;
+      margin: clamp(18px, 4vh, 38px) auto
+    }
+
+    .diya-touch {
+      width: clamp(58px, 12vw, 104px);
+      height: clamp(76px, 14vw, 120px);
+      border: 1px solid #f7d17a88;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #14091eaa, #3a1b2baa);
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      cursor: pointer;
+      filter: grayscale(.8) brightness(.62);
+      transition: transform .35s, filter .35s, box-shadow .35s;
+      touch-action: manipulation
+    }
+
+    .diya-touch.lit {
+      filter: grayscale(0) brightness(1.22);
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px #ffc84b99, 0 0 50px #ff9d3655;
+      animation: diyaFlicker 1.6s ease-in-out infinite alternate
+    }
+
+    .diya-touch:active {
+      transform: scale(.94)
+    }
+
+    @keyframes diyaFlicker {
+      from {
+        filter: brightness(1.05) drop-shadow(0 0 8px #ffbc4a)
+      }
+
+      to {
+        filter: brightness(1.35) drop-shadow(0 0 20px #ffd45c)
+      }
+    }
+
+    .diya-instruction,
+    .diya-count {
+      font-size: clamp(1.1rem, 3vw, 1.45rem);
+      text-shadow: 0 2px 10px #000
+    }
+
+    #continueDiyas:disabled {
+      opacity: .48;
+      cursor: not-allowed
+    }
+
+    #s4 .thali {
+      animation: rotateThali 3.8s linear infinite
+    }
+
+    .music-toggle {
+      position: fixed;
+      top: 14px;
+      right: 16px;
+      z-index: 30;
+      background: #180c2ee6;
+      border: 1px solid #f7d17a99;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font: 12px Arial, sans-serif;
+      letter-spacing: .05em;
+      color: #ffe5a3;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 15px rgba(247, 209, 122, 0.2);
+      transition: all .25s ease
+    }
+
+    .music-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 22px rgba(247, 209, 122, 0.4)
+    }
+
+    .music-toggle.muted {
+      opacity: .65;
+      border-color: #a89aa0;
+      color: #d0c6cd
+    }
+
+    .rangoli-panel {
+      max-width: 980px
+    }
+
+    .rangoli-wrapper {
+      width: min(88vw, 360px);
+      height: min(88vw, 360px);
+      margin: 6px auto;
+      border-radius: 28px;
+      background: radial-gradient(circle, #28133b 0%, #120822 68%, #080410 100%);
+      border: 2px solid #f7d17a88;
+      box-shadow: 0 0 35px rgba(247, 209, 122, 0.22), 0 10px 30px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      touch-action: manipulation
+    }
+
+    .rangoli-wrapper svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible
+    }
+
+    .rangoli-part {
+      cursor: pointer;
+      transition: fill .3s ease, filter .3s ease
+    }
+
+    .rangoli-part:hover {
+      filter: brightness(1.28) drop-shadow(0 0 7px #ffd76a)
+    }
+
+    .rangoli-part:active {
+      transform: scale(0.98)
+    }
+
+    .rangoli-part.selected-target {
+      stroke: #ffffff !important;
+      stroke-width: 2.5 !important;
+      filter: drop-shadow(0 0 9px #ffffff)
+    }
+
+    .rangoli-palette {
+      display: flex;
+      gap: clamp(8px, 2vw, 12px);
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 6px auto 6px;
+      max-width: 440px
+    }
+
+    .color-swatch {
+      width: clamp(28px, 6.8vw, 35px);
+      height: clamp(28px, 6.8vw, 35px);
+      border-radius: 50%;
+      border: 2px solid #ffffff44;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      touch-action: manipulation
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.15)
+    }
+
+    .color-swatch.active {
+      transform: scale(1.22);
+      border-color: #ffffff;
+      box-shadow: 0 0 16px var(--swatch-color, #ffd700), 0 0 4px #fff
+    }
+
+    .rangoli-controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2px auto 6px
+    }
+
+    .rangoli-btn {
+      border: 1px solid #f7d17a77;
+      color: #ffe4a3;
+      background: #1b0d2daa;
+      border-radius: 999px;
+      padding: 6px 13px;
+      font: 11.5px Arial, sans-serif;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .rangoli-btn:hover {
+      background: #f7d17a22;
+      border-color: #f7d17a
+    }
+
+    .rangoli-btn.active {
+      background: linear-gradient(120deg, #9c6724, #e8bd61);
+      color: #1f0c2a;
+      font-weight: bold;
+      border-color: #ffd76a
+    }
+
+    @media(max-width:600px) {
+      .panel {
+        min-height: calc(100svh - 20px);
+        padding: 10px 8px
+      }
+
+      .photo-box {
+        width: 42vw;
+        height: 43vw;
+        min-height: 145px
+      }
+
+      .btn {
+        padding: 10px 15px;
+        font-size: 12px
+      }
+
+      .photo-row {
+        gap: 8px
+      }
+
+      .offer {
+        height: 72px
+      }
+
+      .hand,
+      .sunflower {
+        font-size: 42px
+      }
+
+      .ram-photo-card {
+        margin: 8px auto;
+        width: 95vw
+      }
+
+      .ram-photo-frame img {
+        max-height: min(30vh, 210px)
+      }
+
+      .ram-photo-frame .caption {
+        font-size: 10.5px;
+        padding: 5px 6px;
+        letter-spacing: .02em
+      }
+
+      .music-toggle {
+        top: 8px;
+        right: 10px;
+        padding: 4px 9px;
+        font-size: 10px
+      }
+
+      .rangoli-wrapper {
+        width: min(76vw, 260px);
+        height: min(76vw, 260px);
+        margin: 3px auto;
+        padding: 3px
+      }
+
+      .rangoli-palette {
+        gap: 5px;
+        margin: 3px auto 4px
+      }
+
+      .color-swatch {
+        width: 24px;
+        height: 24px
+      }
+
+      .rangoli-controls {
+        gap: 4px;
+        margin: 2px auto 4px
+      }
+
+      .rangoli-btn {
+        padding: 4px 8px;
+        font-size: 10px
+      }
+
+      .rangoli-instruction {
+        font-size: 0.85rem !important;
+        line-height: 1.3 !important;
+        margin: 2px auto 3px !important
+      }
+
+      #s2 h2 {
+        margin: 3px 0 2px !important;
+        font-size: 1.6rem !important
+      }
+
+      #rangoliStatus {
+        margin: 3px auto 5px !important;
+        font-size: 0.78rem !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <audio id="bgMusic" src="alo-amar-alo-ogo.mp3" loop preload="auto"></audio>
+  <audio id="pujaMusic" src="eso-ma-lokkhi-boso-ghore.mp3" loop preload="auto"></audio>
+  <button id="musicToggle" class="music-toggle" onclick="toggleMute()" aria-label="Toggle festive music">🎵 Music:
+    On</button>
+
+  <div id="bg"></div><canvas id="stars"></canvas><canvas id="fx"></canvas>
+
+  <!-- Screen 0: Opening / Ram Darbar -->
+  <div class="screen active" id="s0">
+    <div class="panel ram-opening">
+      <div class="kicker">॥ श्री राम ॥ • A devotional beginning</div>
+      <h1
+        style="font-size:clamp(2.3rem,7.5vw,4.8rem);color:#ffe7a6;text-shadow:0 0 24px #ff9e3d,0 0 55px #a43d16;margin:10px 0 8px">
+        Jai Shree Ram</h1>
+      <div class="ram-photo-card">
+        <div class="ram-photo-frame">
+          <img src="shree_ram_sita_lakshman.jpg" alt="Prabhu Shree Ram, Mata Sita & Lakshman in Ayodhya">
+          <div class="caption">॥ सियावर रामचंद्र की जय ॥</div>
+        </div>
+      </div>
+      <p style="font-size:clamp(1.02rem,2.6vw,1.35rem);line-height:1.6;margin:10px auto 6px">With the divine blessings
+        of Prabhu Shree Ram,<br>let’s begin this Diwali celebration…</p>
+      <p class="small" style="margin:4px auto 14px">A little festive surprise, prepared with respect and heartfelt
+        wishes for Ma’am.</p>
+      <button class="btn primary" onclick="go(1)">Begin the celebration →</button>
+      <footer>॥ श्री राम जय राम जय जय राम ॥</footer>
+    </div>
+  </div>
+
+  <!-- Screen 1: Diyas -->
+  <div class="screen diya-page" id="s1">
+    <div class="panel">
+      <div class="kicker">A little light, one diya at a time</div>
+      <h2>Let’s light the diyas 🪔</h2>
+      <p class="diya-instruction" id="diyaInstruction">Touch each Diya to light it.</p>
+      <div class="five-diyas" aria-label="Five diyas to light">
+        <button class="diya-touch" aria-label="Light diya 1" onclick="lightDiya(0)">🪔</button>
+        <button class="diya-touch" aria-label="Light diya 2" onclick="lightDiya(1)">🪔</button>
+        <button class="diya-touch" aria-label="Light diya 3" onclick="lightDiya(2)">🪔</button>
+        <button class="diya-touch" aria-label="Light diya 4" onclick="lightDiya(3)">🪔</button>
+        <button class="diya-touch" aria-label="Light diya 5" onclick="lightDiya(4)">🪔</button>
+      </div>
+      <p id="diyaCount" class="diya-count">0 of 5 diyas lit</p>
+      <button class="btn primary" id="continueDiyas" disabled onclick="go(2)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Screen 2: Rangoli Coloring Page (NEW!) -->
+  <div class="screen" id="s2">
+    <div class="panel rangoli-panel">
+      <div class="kicker">Festive Art • Colors of Diwali</div>
+      <h2 style="margin:6px 0 2px">Color the Rangoli 🪷</h2>
+      <p class="rangoli-instruction" id="rangoliInstruction"
+        style="margin:4px auto 6px;font-size:clamp(0.95rem,2.4vw,1.15rem);color:#ffeab5">
+        Pick a festive color, then touch any section of the Rangoli to paint!
+      </p>
+      <div class="rangoli-palette" id="rangoliPalette" aria-label="Rangoli Colors"></div>
+      <div class="rangoli-controls">
+        <button class="rangoli-btn active" id="symmetryBtn" onclick="toggleSymmetry()">✨ Symmetrical: ON</button>
+        <button class="rangoli-btn" onclick="magicFillRangoli()">Magic Fill 🪄</button>
+        <button class="rangoli-btn" onclick="resetRangoli()">Clear ↺</button>
+      </div>
+      <div class="rangoli-wrapper" id="rangoliWrapper">
+        <svg id="rangoliSvg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="rglow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#ffd76a" />
+            </filter>
+          </defs>
+          <circle cx="200" cy="200" r="192" fill="none" stroke="#f7d17a33" stroke-width="1.5" stroke-dasharray="3 3" />
+          <circle cx="200" cy="200" r="182" fill="#150926" stroke="#f7d17a55" stroke-width="1" />
+          <g class="rangoli-part corner-diya" data-group="corner-diyas" id="r-corner-0" onclick="colorPart(this)">
+            <path class="part-shape" d="M30,56 Q48,72 66,56 Q48,50 30,56 Z" fill="#2a1645" stroke="#f7d17abb"
+              stroke-width="1.8" />
+            <path class="part-shape flame" d="M48,50 Q57,38 48,28 Q39,38 48,50 Z" fill="#ff9800" stroke="#ffca58"
+              stroke-width="1.5" />
+          </g>
+          <g class="rangoli-part corner-diya" data-group="corner-diyas" id="r-corner-1" onclick="colorPart(this)">
+            <path class="part-shape" d="M334,56 Q352,72 370,56 Q352,50 334,56 Z" fill="#2a1645" stroke="#f7d17abb"
+              stroke-width="1.8" />
+            <path class="part-shape flame" d="M352,50 Q361,38 352,28 Q343,38 352,50 Z" fill="#ff9800" stroke="#ffca58"
+              stroke-width="1.5" />
+          </g>
+          <g class="rangoli-part corner-diya" data-group="corner-diyas" id="r-corner-2" onclick="colorPart(this)">
+            <path class="part-shape" d="M30,360 Q48,376 66,360 Q48,354 30,360 Z" fill="#2a1645" stroke="#f7d17abb"
+              stroke-width="1.8" />
+            <path class="part-shape flame" d="M48,354 Q57,342 48,332 Q39,342 48,354 Z" fill="#ff9800" stroke="#ffca58"
+              stroke-width="1.5" />
+          </g>
+          <g class="rangoli-part corner-diya" data-group="corner-diyas" id="r-corner-3" onclick="colorPart(this)">
+            <path class="part-shape" d="M334,360 Q352,376 370,360 Q352,354 334,360 Z" fill="#2a1645" stroke="#f7d17abb"
+              stroke-width="1.8" />
+            <path class="part-shape flame" d="M352,354 Q361,342 352,332 Q343,342 352,354 Z" fill="#ff9800"
+              stroke="#ffca58" stroke-width="1.5" />
+          </g>
+          <path class="rangoli-part part-shape outer-scallop" data-group="scallops" id="r-scallop-0"
+            onclick="colorPart(this)" d="M 180,30 Q 200,10 220,30 Q 200,42 180,30 Z" transform="rotate(22.5, 200, 200)"
+            fill="#221138" stroke="#f7d17abb" stroke-width="1.5" />
+          <path class="rangoli-part part-shape outer-scallop" data-group="scallops" id="r-scallop-1"
+            onclick="colorPart(this)" d="M 180,30 Q 200,10 220,30 Q 200,42 180,30 Z" transform="rotate(67.5, 200, 200)"
+            fill="#221138" stroke="#f7d17abb" stroke-width="1.5" />
+          <path class="rangoli-part part-shape outer-scallop" data-group="scallops" id="r-scallop-2"
+            onclick="colorPart(this)" d="M 180,30 Q 200,10 220,30 Q 200,42 180,30 Z" transform="rotate(112.5, 200, 200)"
+            fill="#221138" stroke="#f7d17abb" stroke-width="1.5" />
+          <path class="rangoli-part part-shape outer-scallop" data-group="scallops" id="r-scallop-3"
+            onclick="colorPart(this)" d="M 180,30 Q 200,10 220,30 Q 200,42 180,30 Z" transform="rotate(157.5, 200, 200)"
+            fill="#221138" stroke="#f7d17abb" stroke-width="1.5" />
+          <path class="rangoli-part part-shape outer-scallop" data-group="scallops" id="r-scallop-4"
+            onclick="colorPart(this)" d="M 180,30 Q 200,10 220,30 Q 200,42 180,30 Z" transform="rotate(202.5, 200, 200)"
+            fill="#221138" stroke="#f7d17abb" stroke-width="1.5" />
+          <path class="rangoli-part part-shape outer-scallop" data-group="scallops" id="r-scallop-5"
+            onclick="colorPart(this)" d="M 180,30 Q 200,10 220,30 Q 200,42 180,30 Z" transform="rotate(247.5, 200, 200)"
+            fill="#221138" stroke="#f7d17abb" stroke-width="1.5" />
+          <path class="rangoli-part part-shape outer-scallop" data-group="scallops" id="r-scallop-6"
+            onclick="colorPart(this)" d="M 180,30 Q 200,10 220,30 Q 200,42 180,30 Z" transform="rotate(292.5, 200, 200)"
+            fill="#221138" stroke="#f7d17abb" stroke-width="1.5" />
+          <path class="rangoli-part part-shape outer-scallop" data-group="scallops" id="r-scallop-7"
+            onclick="colorPart(this)" d="M 180,30 Q 200,10 220,30 Q 200,42 180,30 Z" transform="rotate(337.5, 200, 200)"
+            fill="#221138" stroke="#f7d17abb" stroke-width="1.5" />
+          <path class="rangoli-part part-shape outer-petal" data-group="outer-petals" id="r-outer-0"
+            onclick="colorPart(this)" d="M 200,32 C 168,85 162,128 200,165 C 238,128 232,85 200,32 Z"
+            transform="rotate(0, 200, 200)" fill="#2f1752" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape outer-petal" data-group="outer-petals" id="r-outer-1"
+            onclick="colorPart(this)" d="M 200,32 C 168,85 162,128 200,165 C 238,128 232,85 200,32 Z"
+            transform="rotate(45, 200, 200)" fill="#2f1752" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape outer-petal" data-group="outer-petals" id="r-outer-2"
+            onclick="colorPart(this)" d="M 200,32 C 168,85 162,128 200,165 C 238,128 232,85 200,32 Z"
+            transform="rotate(90, 200, 200)" fill="#2f1752" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape outer-petal" data-group="outer-petals" id="r-outer-3"
+            onclick="colorPart(this)" d="M 200,32 C 168,85 162,128 200,165 C 238,128 232,85 200,32 Z"
+            transform="rotate(135, 200, 200)" fill="#2f1752" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape outer-petal" data-group="outer-petals" id="r-outer-4"
+            onclick="colorPart(this)" d="M 200,32 C 168,85 162,128 200,165 C 238,128 232,85 200,32 Z"
+            transform="rotate(180, 200, 200)" fill="#2f1752" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape outer-petal" data-group="outer-petals" id="r-outer-5"
+            onclick="colorPart(this)" d="M 200,32 C 168,85 162,128 200,165 C 238,128 232,85 200,32 Z"
+            transform="rotate(225, 200, 200)" fill="#2f1752" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape outer-petal" data-group="outer-petals" id="r-outer-6"
+            onclick="colorPart(this)" d="M 200,32 C 168,85 162,128 200,165 C 238,128 232,85 200,32 Z"
+            transform="rotate(270, 200, 200)" fill="#2f1752" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape outer-petal" data-group="outer-petals" id="r-outer-7"
+            onclick="colorPart(this)" d="M 200,32 C 168,85 162,128 200,165 C 238,128 232,85 200,32 Z"
+            transform="rotate(315, 200, 200)" fill="#2f1752" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape middle-diamond" data-group="middle-diamonds" id="r-diamond-0"
+            onclick="colorPart(this)" d="M 200,82 L 222,112 L 200,142 L 178,112 Z" transform="rotate(22.5, 200, 200)"
+            fill="#24123d" stroke="#f7d17abb" stroke-width="1.6" />
+          <path class="rangoli-part part-shape middle-diamond" data-group="middle-diamonds" id="r-diamond-1"
+            onclick="colorPart(this)" d="M 200,82 L 222,112 L 200,142 L 178,112 Z" transform="rotate(67.5, 200, 200)"
+            fill="#24123d" stroke="#f7d17abb" stroke-width="1.6" />
+          <path class="rangoli-part part-shape middle-diamond" data-group="middle-diamonds" id="r-diamond-2"
+            onclick="colorPart(this)" d="M 200,82 L 222,112 L 200,142 L 178,112 Z" transform="rotate(112.5, 200, 200)"
+            fill="#24123d" stroke="#f7d17abb" stroke-width="1.6" />
+          <path class="rangoli-part part-shape middle-diamond" data-group="middle-diamonds" id="r-diamond-3"
+            onclick="colorPart(this)" d="M 200,82 L 222,112 L 200,142 L 178,112 Z" transform="rotate(157.5, 200, 200)"
+            fill="#24123d" stroke="#f7d17abb" stroke-width="1.6" />
+          <path class="rangoli-part part-shape middle-diamond" data-group="middle-diamonds" id="r-diamond-4"
+            onclick="colorPart(this)" d="M 200,82 L 222,112 L 200,142 L 178,112 Z" transform="rotate(202.5, 200, 200)"
+            fill="#24123d" stroke="#f7d17abb" stroke-width="1.6" />
+          <path class="rangoli-part part-shape middle-diamond" data-group="middle-diamonds" id="r-diamond-5"
+            onclick="colorPart(this)" d="M 200,82 L 222,112 L 200,142 L 178,112 Z" transform="rotate(247.5, 200, 200)"
+            fill="#24123d" stroke="#f7d17abb" stroke-width="1.6" />
+          <path class="rangoli-part part-shape middle-diamond" data-group="middle-diamonds" id="r-diamond-6"
+            onclick="colorPart(this)" d="M 200,82 L 222,112 L 200,142 L 178,112 Z" transform="rotate(292.5, 200, 200)"
+            fill="#24123d" stroke="#f7d17abb" stroke-width="1.6" />
+          <path class="rangoli-part part-shape middle-diamond" data-group="middle-diamonds" id="r-diamond-7"
+            onclick="colorPart(this)" d="M 200,82 L 222,112 L 200,142 L 178,112 Z" transform="rotate(337.5, 200, 200)"
+            fill="#24123d" stroke="#f7d17abb" stroke-width="1.6" />
+          <path class="rangoli-part part-shape inner-petal" data-group="inner-petals" id="r-inner-0"
+            onclick="colorPart(this)" d="M 200,132 C 182,150 180,172 200,186 C 220,172 218,150 200,132 Z"
+            transform="rotate(0, 200, 200)" fill="#391a62" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape inner-petal" data-group="inner-petals" id="r-inner-1"
+            onclick="colorPart(this)" d="M 200,132 C 182,150 180,172 200,186 C 220,172 218,150 200,132 Z"
+            transform="rotate(45, 200, 200)" fill="#391a62" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape inner-petal" data-group="inner-petals" id="r-inner-2"
+            onclick="colorPart(this)" d="M 200,132 C 182,150 180,172 200,186 C 220,172 218,150 200,132 Z"
+            transform="rotate(90, 200, 200)" fill="#391a62" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape inner-petal" data-group="inner-petals" id="r-inner-3"
+            onclick="colorPart(this)" d="M 200,132 C 182,150 180,172 200,186 C 220,172 218,150 200,132 Z"
+            transform="rotate(135, 200, 200)" fill="#391a62" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape inner-petal" data-group="inner-petals" id="r-inner-4"
+            onclick="colorPart(this)" d="M 200,132 C 182,150 180,172 200,186 C 220,172 218,150 200,132 Z"
+            transform="rotate(180, 200, 200)" fill="#391a62" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape inner-petal" data-group="inner-petals" id="r-inner-5"
+            onclick="colorPart(this)" d="M 200,132 C 182,150 180,172 200,186 C 220,172 218,150 200,132 Z"
+            transform="rotate(225, 200, 200)" fill="#391a62" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape inner-petal" data-group="inner-petals" id="r-inner-6"
+            onclick="colorPart(this)" d="M 200,132 C 182,150 180,172 200,186 C 220,172 218,150 200,132 Z"
+            transform="rotate(270, 200, 200)" fill="#391a62" stroke="#f7d17abb" stroke-width="1.8" />
+          <path class="rangoli-part part-shape inner-petal" data-group="inner-petals" id="r-inner-7"
+            onclick="colorPart(this)" d="M 200,132 C 182,150 180,172 200,186 C 220,172 218,150 200,132 Z"
+            transform="rotate(315, 200, 200)" fill="#391a62" stroke="#f7d17abb" stroke-width="1.8" />
+          <circle class="rangoli-part part-shape tip-bindi" data-group="tip-bindis" id="r-tip-0"
+            onclick="colorPart(this)" cx="200" cy="22" r="4.5" transform="rotate(0, 200, 200)" fill="#f7d17a"
+            stroke="#f7d17a" stroke-width="1" />
+          <circle class="rangoli-part part-shape tip-bindi" data-group="tip-bindis" id="r-tip-1"
+            onclick="colorPart(this)" cx="200" cy="22" r="4.5" transform="rotate(45, 200, 200)" fill="#f7d17a"
+            stroke="#f7d17a" stroke-width="1" />
+          <circle class="rangoli-part part-shape tip-bindi" data-group="tip-bindis" id="r-tip-2"
+            onclick="colorPart(this)" cx="200" cy="22" r="4.5" transform="rotate(90, 200, 200)" fill="#f7d17a"
+            stroke="#f7d17a" stroke-width="1" />
+          <circle class="rangoli-part part-shape tip-bindi" data-group="tip-bindis" id="r-tip-3"
+            onclick="colorPart(this)" cx="200" cy="22" r="4.5" transform="rotate(135, 200, 200)" fill="#f7d17a"
+            stroke="#f7d17a" stroke-width="1" />
+          <circle class="rangoli-part part-shape tip-bindi" data-group="tip-bindis" id="r-tip-4"
+            onclick="colorPart(this)" cx="200" cy="22" r="4.5" transform="rotate(180, 200, 200)" fill="#f7d17a"
+            stroke="#f7d17a" stroke-width="1" />
+          <circle class="rangoli-part part-shape tip-bindi" data-group="tip-bindis" id="r-tip-5"
+            onclick="colorPart(this)" cx="200" cy="22" r="4.5" transform="rotate(225, 200, 200)" fill="#f7d17a"
+            stroke="#f7d17a" stroke-width="1" />
+          <circle class="rangoli-part part-shape tip-bindi" data-group="tip-bindis" id="r-tip-6"
+            onclick="colorPart(this)" cx="200" cy="22" r="4.5" transform="rotate(270, 200, 200)" fill="#f7d17a"
+            stroke="#f7d17a" stroke-width="1" />
+          <circle class="rangoli-part part-shape tip-bindi" data-group="tip-bindis" id="r-tip-7"
+            onclick="colorPart(this)" cx="200" cy="22" r="4.5" transform="rotate(315, 200, 200)" fill="#f7d17a"
+            stroke="#f7d17a" stroke-width="1" />
+          <circle class="rangoli-part part-shape center-ring" data-group="center-ring" id="r-center-ring"
+            onclick="colorPart(this)" cx="200" cy="200" r="26" fill="#2c1348" stroke="#f7d17abb" stroke-width="2" />
+          <circle class="rangoli-part part-shape center-core" data-group="center-core" id="r-center-core"
+            onclick="colorPart(this)" cx="200" cy="200" r="14" fill="#421a6e" stroke="#f7d17abb" stroke-width="2" />
+        </svg>
+      </div>
+      <p class="small" id="rangoliStatus" style="margin:4px auto 8px;color:#f3d790">Touch petals to paint them with your
+        chosen color.</p>
+      <button class="btn primary" onclick="go(3)">Continue to Dhanteras →</button>
+    </div>
+  </div>
+
+  <!-- Screen 3: Dhanteras -->
+  <div class="screen" id="s3">
+    <div class="panel">
+      <div class="kicker">First • Dhanteras</div>
+      <div class="orn">🪔 🪙 🌼</div>
+      <h2>Shubh Dhanteras, Ma’am</h2>
+      <p>May this Dhanteras bring you health, peace, prosperity, and many gentle reasons to smile.</p>
+      <textarea id="dhanterasMsg"
+        placeholder="Write your personal Dhanteras message here…">Ma’am, may Maa Lakshmi’s divine grace always be upon you. May She arrive in your life with abundant happiness, prosperity, and blessings, and may your days always be filled with joy, peace, and countless reasons to smile. May you always remain as happy and radiant as you are. ✨</textarea>
+      <button class="btn primary" onclick="go(4)">Continue to Lakshmi Puja →</button>
+    </div>
+  </div>
+
+  <!-- Screen 4: Lakshmi Puja -->
+  <div class="screen puja" id="s4">
+    <div id="petals"></div>
+    <div class="panel">
+      <div class="kicker">A moment of devotion • blessings & light</div>
+      <h2 style="margin-bottom:8px">Maa Lakshmi Puja</h2>
+
+      <div class="photo-row fixed-photos">
+        <div class="photo-box"><img class="fixed-photo" src="maa_lakshmi.jpg" alt="Maa Lakshmi" style="display:block">
+          <div class="photo-caption">॥ Maa Lakshmi ॥</div>
+        </div>
+        <div class="photo-box"><img class="fixed-photo" src="maam_photo.jpg" alt="Ma’am" style="display:block">
+          <div class="photo-caption">॥ Laxmi Ma ॥</div>
+        </div>
+      </div>
+
+      <button class="btn primary" id="aartiBtn" onclick="startAarti()">Start Aarti 🪔</button>
+      <div class="aarti-wrap" id="thaliWrap" style="display:none">
+        <div class="thali">
+          <div class="thali-ring"></div>
+          <div class="thali-flower f1">🌺</div>
+          <div class="thali-flower f2">🌼</div>
+          <div class="thali-flower f3">🌸</div>
+          <div class="thali-flower f4">🌼</div>
+          <div class="thali-diya">🪔</div>
+        </div>
+      </div>
+      <div class="audio-note" id="audioNote">॥ এসো মা লক্ষ্মী বসো ঘরে ॥ Sacred Lakshmi Puja devotional song is playing.
+      </div>
+      <button class="btn primary" id="afterAarti" style="display:none" onclick="go(5)">Receive blessings →</button>
+    </div>
+  </div>
+
+  <!-- Screen 5: Blessings -->
+  <div class="screen" id="s5">
+    <div class="panel">
+      <div class="kicker">Blessings of the festival</div>
+      <div class="orn">🪷 ✨ 🪷</div>
+      <h2>May Maa Lakshmi bless you</h2>
+      <p>May your home be filled with peace, your life with abundance, and every new beginning with hope and happiness.
+      </p>
+      <button class="btn primary" onclick="go(6)">A little festive treat →</button>
+    </div>
+  </div>
+
+  <!-- Screen 6: Scratch Treat -->
+  <div class="screen" id="s6">
+    <div class="panel">
+      <div class="kicker">A little Diwali treat</div>
+      <h2 style="margin:8px 0 10px">Scratch to reveal ✨</h2>
+      <div class="scratch" id="scratch">
+        <div class="under">
+          <img src="diwali_feast.jpg" alt="A grand Diwali feast and sweets for Ma’am" class="scratch-photo">
+        </div>
+        <canvas id="scratchCanvas"></canvas>
+      </div>
+      <button class="btn primary" onclick="go(7)">Let’s celebrate Diwali →</button>
+    </div>
+  </div>
+
+  <!-- Screen 7: Grand Fireworks -->
+  <div class="screen" id="s7"><video class="finale-video" src="diwali_grand_fireworks.mp4" autoplay muted loop
+      playsinline preload="auto"></video>
+    <div class="panel">
+      <div class="kicker">The festival of lights • divine blessings</div>
+      <div class="orn">🙏 🪔 🙏</div>
+      <h2>Shubh Deepawali!</h2>
+      <p>May the blessings of Prabhu Shree Ram and Maa Lakshmi bring light, courage, peace, and happiness into every
+        step ahead.</p>
+      <p>Let the skies glow with the grand spirit of Diwali.</p>
+      <button class="btn primary" onclick="fireworks()">Celebrate with fireworks 🎆</button>
+      <div class="fireworks" id="fireworksText" style="display:none">✨🎆🌟</div>
+      <button class="btn" onclick="go(8)">Your Diwali wish →</button>
+    </div>
+  </div>
+
+  <!-- Screen 8: Personal Wish -->
+  <div class="screen" id="s8"><video class="finale-video" src="diwali_grand_fireworks.mp4" autoplay muted loop
+      playsinline preload="auto"></video>
+    <div class="panel">
+      <div class="kicker">With warmest wishes & respect</div>
+      <div class="orn">🪔 🌻 🪔</div>
+      <h1>Shubh Deepawali,<br>Ma’am!</h1>
+      <textarea id="diwaliMsg"
+        placeholder="Write your personal Diwali message here…">Ma’am, wishing you a Diwali filled with light, peace, happiness, and beautiful memories. May the coming year bring you success in everything you do and many moments that make you smile.Ma’am, just as the return of Prabhu Shree Ram filled Ayodhya with the light of countless diyas, may His divine presence always illuminate your heart and your life. May He fill your days with endless happiness, peace, and countless beautiful reasons to smile. And whenever life feels heavy, may His blessings gently ease your sorrows, replacing every sadness with hope, warmth, and joy. May your heart always remain as bright as Ayodhya on the night of His return. 🪔✨ Happy Diwali!</textarea>
+      <p style="color:#f7d17a;font-style:italic">With lots of respect,<br>Janak</p>
+      <button class="btn" onclick="go(0)">Replay the celebration ↺</button>
+      <footer>HAPPY DIWALI • LIGHT • PEACE • JOY</footer>
+    </div>
+  </div>
+
+  <script>
+    let bgMusic = document.getElementById('bgMusic');
+    let pujaMusic = document.getElementById('pujaMusic');
+    let isMuted = false;
+    let userHasInteracted = false;
+
+    function playBgMusic() {
+      if (isMuted) return;
+      pujaMusic.pause();
+      bgMusic.play().catch(() => { });
+    }
+
+    function playPujaMusic() {
+      if (isMuted) return;
+      bgMusic.pause();
+      pujaMusic.currentTime = 0;
+      pujaMusic.play().catch(() => { });
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      let btn = document.getElementById('musicToggle');
+      if (isMuted) {
+        bgMusic.pause();
+        pujaMusic.pause();
+        btn.innerHTML = '🔇 Music: Off';
+        btn.classList.add('muted');
+      } else {
+        btn.innerHTML = '🎵 Music: On';
+        btn.classList.remove('muted');
+        let active = document.querySelector('.screen.active');
+        if (active && active.id === 's4') {
+          pujaMusic.play().catch(() => { });
+        } else {
+          bgMusic.play().catch(() => { });
+        }
+      }
+    }
+
+    function go(n) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      let el = document.getElementById('s' + n);
+      if (el) el.classList.add('active');
+
+      userHasInteracted = true;
+      if (n === 4) {
+        // Lakshmi Puja screen: ONLY play eso-ma-lokkhi-boso-ghore.mp3
+        playPujaMusic();
+        startAarti();
+        startFlowers();
+      } else {
+        // All other screens: play alo-amar-alo-ogo.mp3
+        playBgMusic();
+      }
+
+      if (n === 6) {
+        setTimeout(setupScratch, 60);
+      }
+
+      if (n === 7 || n === 8) {
+        document.querySelectorAll('#s' + n + ' .finale-video').forEach(v => {
+          v.currentTime = 0;
+          v.play().catch(() => { });
+        });
+      }
+    }
+
+    const diyasLit = new Set();
+    function lightDiya(index) {
+      const el = document.querySelectorAll('.diya-touch')[index];
+      if (!el || diyasLit.has(index)) return;
+      diyasLit.add(index);
+      el.classList.add('lit');
+      el.setAttribute('aria-pressed', 'true');
+      document.getElementById('diyaCount').textContent = diyasLit.size + ' of 5 diyas lit';
+      if (diyasLit.size === 5) {
+        document.getElementById('diyaInstruction').textContent = 'All five diyas are glowing. Shubh Deepawali! ✨';
+        document.getElementById('continueDiyas').disabled = false;
+      }
+      if (!isMuted && bgMusic.paused) playBgMusic();
+    }
+
+    // Rangoli Interactive Logic
+    const rangoliColors = [
+      { name: 'Rani Pink', hex: '#e91e63' },
+      { name: 'Saffron Orange', hex: '#ff7a00' },
+      { name: 'Haldi Yellow', hex: '#ffd600' },
+      { name: 'Emerald Green', hex: '#00e676' },
+      { name: 'Peacock Cyan', hex: '#00e5ff' },
+      { name: 'Lotus Purple', hex: '#ba68c8' },
+      { name: 'Sindoor Red', hex: '#d50000' },
+      { name: 'Sacred White', hex: '#ffffff' }
+    ];
+
+    let selectedColor = '#ff7a00';
+    let symmetryMode = true;
+    let activeRangoliPart = null;
+
+    function initRangoliPalette() {
+      const container = document.getElementById('rangoliPalette');
+      if (!container) return;
+      container.innerHTML = '';
+      rangoliColors.forEach((c) => {
+        const btn = document.createElement('button');
+        btn.className = 'color-swatch' + (c.hex === selectedColor ? ' active' : '');
+        btn.style.backgroundColor = c.hex;
+        btn.style.setProperty('--swatch-color', c.hex);
+        btn.setAttribute('aria-label', c.name);
+        btn.title = c.name;
+        btn.onclick = () => selectColor(c.hex, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectColor(hex, btnEl) {
+      selectedColor = hex;
+      document.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      if (activeRangoliPart) {
+        applyColorToPart(activeRangoliPart, hex);
+        activeRangoliPart = null;
+        document.querySelectorAll('.rangoli-part').forEach(p => p.classList.remove('selected-target'));
+      }
+    }
+
+    function colorPart(el) {
+      if (selectedColor) {
+        applyColorToPart(el, selectedColor);
+      } else {
+        document.querySelectorAll('.rangoli-part').forEach(p => p.classList.remove('selected-target'));
+        activeRangoliPart = el;
+        el.classList.add('selected-target');
+        let status = document.getElementById('rangoliStatus');
+        if (status) status.textContent = 'Touch a color above to paint this section!';
+      }
+      if (!isMuted && bgMusic.paused) playBgMusic();
+    }
+
+    function applyColorToPart(el, hex) {
+      const group = el.getAttribute('data-group');
+      let targets = [el];
+      if (symmetryMode && group) {
+        targets = Array.from(document.querySelectorAll(`[data-group="${group}"]`));
+      }
+      targets.forEach(t => {
+        if (t.tagName.toLowerCase() === 'g') {
+          t.querySelectorAll('.part-shape').forEach(s => s.style.fill = hex);
+        } else {
+          t.style.fill = hex;
+        }
+        t.style.filter = 'drop-shadow(0 0 6px ' + hex + ')';
+        setTimeout(() => { t.style.filter = ''; }, 400);
+      });
+      let status = document.getElementById('rangoliStatus');
+      if (status) status.textContent = '✨ Beautiful! Keep coloring or proceed to Dhanteras.';
+    }
+
+    function toggleSymmetry() {
+      symmetryMode = !symmetryMode;
+      const btn = document.getElementById('symmetryBtn');
+      if (symmetryMode) {
+        btn.textContent = '✨ Symmetrical: ON';
+        btn.classList.add('active');
+      } else {
+        btn.textContent = '✨ Single Petal';
+        btn.classList.remove('active');
+      }
+    }
+
+    function magicFillRangoli() {
+      const magicMap = {
+        'center-core': '#d50000',
+        'center-ring': '#ffd600',
+        'inner-petals': '#ff7a00',
+        'middle-diamonds': '#00e676',
+        'outer-petals': '#e91e63',
+        'scallops': '#00e5ff',
+        'tip-bindis': '#ffd600',
+        'corner-diyas': '#ff9800'
+      };
+      Object.keys(magicMap).forEach(grp => {
+        const col = magicMap[grp];
+        document.querySelectorAll(`[data-group="${grp}"]`).forEach(t => {
+          if (t.tagName.toLowerCase() === 'g') {
+            t.querySelectorAll('.part-shape').forEach(s => s.style.fill = col);
+          } else {
+            t.style.fill = col;
+          }
+        });
+      });
+      let status = document.getElementById('rangoliStatus');
+      if (status) status.textContent = '✨ Rangoli filled with royal festive colors!';
+    }
+
+    function resetRangoli() {
+      const defaultFill = '#231238';
+      document.querySelectorAll('.rangoli-part').forEach(t => {
+        if (t.tagName.toLowerCase() === 'g') {
+          t.querySelectorAll('.part-shape').forEach(s => s.style.fill = defaultFill);
+        } else {
+          t.style.fill = defaultFill;
+        }
+      });
+      let status = document.getElementById('rangoliStatus');
+      if (status) status.textContent = 'Rangoli cleared. Touch any petal to start coloring!';
+    }
+
+    // Aarti
+    let aartiStarted = false;
+    function startAarti() {
+      if (aartiStarted) return;
+      aartiStarted = true;
+      let thaliWrap = document.getElementById('thaliWrap');
+      if (thaliWrap) thaliWrap.style.display = 'flex';
+      let next = document.getElementById('afterAarti');
+      if (next) next.style.display = 'inline-block';
+      let btn = document.getElementById('aartiBtn');
+      if (btn) {
+        btn.textContent = 'Aarti in progress 🪔';
+        btn.disabled = true;
+      }
+      let note = document.getElementById('audioNote');
+      if (note) note.textContent = '॥ এসো মা লক্ষ্মী বসো ঘরে ॥ Aarti is playing.';
+      playPujaMusic();
+    }
+
+    // Fireworks
+    function fireworks() {
+      const title = document.getElementById('fireworksText');
+      if (title) {
+        title.style.display = 'block';
+        title.innerHTML = '✨🎆 SHUBH DEEPAWALI 🎆✨';
+      }
+      const fx = document.getElementById('fx'), c = fx.getContext('2d');
+      fx.width = innerWidth;
+      fx.height = innerHeight;
+      let particles = [], rockets = [], launches = 0;
+      const colors = ['#ffd76a', '#ff4d75', '#ff9b45', '#7deaff', '#d7a0ff', '#fff5d6', '#8dffb2'];
+      function burst(x, y, color, grand = false) {
+        const n = grand ? 190 : 120;
+        for (let i = 0; i < n; i++) {
+          let ang = Math.random() * Math.PI * 2, sp = (grand ? 2.5 : 1.5) + Math.random() * (grand ? 7 : 5);
+          particles.push({ x, y, px: x, py: y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 65 + Math.random() * 65, max: 130, color, size: .8 + Math.random() * 2.3, gravity: .025 + Math.random() * .04 });
+        }
+      }
+      function launch() {
+        if (launches++ >= 15) return;
+        let x = fx.width * (.1 + Math.random() * .8), ty = fx.height * (.12 + Math.random() * .5), col = colors[Math.floor(Math.random() * colors.length)];
+        rockets.push({ x, y: fx.height + 5, ty, v: 5 + Math.random() * 3, color: col });
+        setTimeout(launch, 240 + Math.random() * 480);
+      }
+      launch();
+      function tick() {
+        c.fillStyle = 'rgba(2,2,12,.18)';
+        c.fillRect(0, 0, fx.width, fx.height);
+        rockets = rockets.filter(r => {
+          r.y -= r.v;
+          c.strokeStyle = r.color;
+          c.lineWidth = 2;
+          c.globalAlpha = .8;
+          c.beginPath();
+          c.moveTo(r.x, r.y + 22);
+          c.lineTo(r.x, r.y);
+          c.stroke();
+          if (r.y < r.ty) {
+            burst(r.x, r.y, r.color, Math.random() < .45);
+            return false;
+          }
+          return true;
+        });
+        particles = particles.filter(p => {
+          p.px = p.x; p.py = p.y;
+          p.x += p.vx; p.y += p.vy;
+          p.vy += p.gravity; p.vx *= .986;
+          p.life--;
+          c.globalAlpha = Math.max(0, p.life / p.max);
+          c.strokeStyle = p.color;
+          c.lineWidth = p.size;
+          c.beginPath();
+          c.moveTo(p.px, p.py);
+          c.lineTo(p.x, p.y);
+          c.stroke();
+          return p.life > 0;
+        });
+        c.globalAlpha = 1;
+        if (rockets.length || particles.length || launches <= 15) requestAnimationFrame(tick);
+        else setTimeout(() => c.clearRect(0, 0, fx.width, fx.height), 1500);
+      }
+      tick();
+    }
+
+    // Stars background
+    let sc = document.getElementById('stars'), ctx = sc.getContext('2d'), stars = [];
+    function resize() {
+      sc.width = innerWidth; sc.height = innerHeight;
+      stars = Array.from({ length: 120 }, () => ({ x: Math.random() * sc.width, y: Math.random() * sc.height, r: .3 + Math.random() * 1.5, p: Math.random() * 6 }));
+    }
+    function draw() {
+      ctx.clearRect(0, 0, sc.width, sc.height);
+      stars.forEach(s => {
+        s.p += .02;
+        ctx.globalAlpha = .15 + .6 * (Math.sin(s.p) + 1) / 2;
+        ctx.fillStyle = '#ffe7ac';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(draw);
+    }
+    resize(); draw(); addEventListener('resize', resize);
+
+    // Flower Petals for Lakshmi Puja
+    let flowersStarted = false;
+    function startFlowers() {
+      if (flowersStarted) return;
+      flowersStarted = true;
+      let root = document.getElementById('petals');
+      if (!root) return;
+      for (let i = 0; i < 90; i++) {
+        let p = document.createElement('span');
+        p.className = 'petal';
+        p.textContent = ['🌺', '🌸', '🌼', '🪷'][Math.floor(Math.random() * 4)];
+        p.style.left = (Math.random() * 100) + '%';
+        p.style.animationDuration = (3.5 + Math.random() * 4.5) + 's';
+        p.style.animationDelay = (Math.random() * 2) + 's';
+        p.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+        root.appendChild(p);
+        setTimeout(() => p.remove(), 9000);
+      }
+    }
+
+    // Scratch Card
+    let canvas = document.getElementById('scratchCanvas'), cc = canvas.getContext('2d'), scratching = false;
+    let scratchReady = false;
+    function setupScratch() {
+      let r = canvas.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) return;
+      scratchReady = true;
+      canvas.width = r.width * devicePixelRatio;
+      canvas.height = r.height * devicePixelRatio;
+      cc.scale(devicePixelRatio, devicePixelRatio);
+
+      let grad = cc.createLinearGradient(0, 0, r.width, r.height);
+      grad.addColorStop(0, '#9c6724');
+      grad.addColorStop(0.3, '#f5d67f');
+      grad.addColorStop(0.7, '#8f4f1d');
+      grad.addColorStop(1, '#e8be63');
+      cc.fillStyle = grad;
+      cc.fillRect(0, 0, r.width, r.height);
+
+      cc.fillStyle = '#220e28';
+      let fontSize = Math.max(15, Math.min(22, r.width * 0.05));
+      cc.font = 'bold ' + fontSize + 'px Georgia, serif';
+      cc.textAlign = 'center';
+      cc.textBaseline = 'middle';
+      cc.shadowColor = '#ffeaa7';
+      cc.shadowBlur = 8;
+      cc.fillText('✨ SCRATCH HERE ✨', r.width / 2, r.height / 2);
+      cc.shadowBlur = 0;
+      cc.globalCompositeOperation = 'destination-out';
+    }
+    setupScratch();
+
+    function scratch(e) {
+      if (!scratching) return;
+      let r = canvas.getBoundingClientRect();
+      let x = (e.clientX - r.left), y = (e.clientY - r.top);
+      let brushRadius = Math.max(24, Math.min(36, r.width * 0.065));
+      cc.beginPath();
+      cc.arc(x, y, brushRadius, 0, Math.PI * 2);
+      cc.fill();
+    }
+    canvas.addEventListener('pointerdown', e => { scratching = true; canvas.setPointerCapture(e.pointerId); scratch(e); });
+    canvas.addEventListener('pointermove', scratch);
+    canvas.addEventListener('pointerup', () => scratching = false);
+    canvas.addEventListener('pointercancel', () => scratching = false);
+
+    // Init on load
+    initRangoliPalette();
+  </script>
+</body>
+
+</html>
