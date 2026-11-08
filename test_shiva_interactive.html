@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Shiva Rangoli</title>
+<style>
+  body {
+    background: #0d0618;
+    color: #fff;
+    font-family: Georgia, serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .rangoli-panel {
+    text-align: center;
+    max-width: 520px;
+    width: 100%;
+  }
+  .rangoli-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 8px 0;
+  }
+  .rangoli-btn {
+    background: #251240;
+    border: 1px solid #ffd76a;
+    color: #ffe6a6;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .rangoli-btn.active {
+    background: #e65100;
+    color: #fff;
+    border-color: #ffb74d;
+  }
+  .rangoli-canvas-wrapper {
+    position: relative;
+    width: min(92vw, 380px);
+    height: min(92vw, 380px);
+    margin: 8px auto;
+  }
+  #rangoliCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 50%;
+    box-shadow: 0 0 35px rgba(255, 215, 106, 0.4);
+    background: #140822;
+    touch-action: none;
+    cursor: crosshair;
+  }
+</style>
+</head>
+<body>
+  <div class="rangoli-panel">
+    <h2>Color Lord Shiva’s Rangoli 🪷</h2>
+    <div class="rangoli-controls">
+      <button class="rangoli-btn active" id="groupBtn" onclick="toggleGroupFill()">✨ Linked Color: ON</button>
+      <button class="rangoli-btn" onclick="magicFillRangoli()">Magic Fill 🪄</button>
+      <button class="rangoli-btn" onclick="resetRangoli()">Clear ↺</button>
+    </div>
+    <div class="rangoli-canvas-wrapper">
+      <canvas id="rangoliCanvas" width="680" height="660"></canvas>
+    </div>
+    <p id="rangoliStatus">Touch any section of the Rangoli to paint with your chosen color!</p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('rangoliCanvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    
+    let regionsData = null;
+    let outlineImg = new Image();
+    let coloredImg = new Image();
+    let isMagicFilled = false;
+    let groupFillMode = true;
+    let currentColor = '#00e5ff';
+    
+    // Region colors dictionary: regionId -> {r, g, b}
+    const blankColor = { r: 20, g: 8, b: 34 };
+    let regionFills = {};
+    
+    const originalColorsHex = {
+      1: '#00a2ed',  // Shiva Neelkanth Blue
+      2: '#18181c',  // Hair
+      3: '#ffde17',  // Crescent Moon
+      4: '#00c0f3',  // Ganga Waves
+      5: '#1b9e4a',  // Snake
+      6: '#fed000',  // Snake Belly
+      7: '#e85618',  // Damru
+      8: '#ffe200',  // Halo Inner
+      9: '#ff7700',  // Halo Outer
+      10: '#e21a8c', // Magenta Petals
+      11: '#842b93', // Purple Petals
+      12: '#c67d0a', // Rudraksha
+      13: '#ffc700', // Earring
+      14: '#e53935'  // Tilak
+    };
+    
+    function hexToRgb(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const num = parseInt(hex, 16);
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+    
+    // Load region map
+    const regImg = new Image();
+    regImg.src = 'shiva_regions.png';
+    regImg.onload = () => {
+      const off = document.createElement('canvas');
+      off.width = 680;
+      off.height = 660;
+      const offCtx = off.getContext('2d');
+      offCtx.drawImage(regImg, 0, 0);
+      regionsData = offCtx.getImageData(0, 0, 680, 660).data;
+      checkReady();
+    };
+    
+    outlineImg.src = 'shiva_outline_final.png';
+    outlineImg.onload = checkReady;
+    
+    coloredImg.src = 'shiva_colored_final.png';
+    coloredImg.onload = checkReady;
+    
+    let loadedCount = 0;
+    function checkReady() {
+      loadedCount++;
+      if (loadedCount >= 3) {
+        renderCanvas();
+        console.log('Shiva Rangoli Initialized!');
+      }
+    }
+    
+    function renderCanvas() {
+      if (!regionsData || !outlineImg.complete) return;
+      
+      if (isMagicFilled && coloredImg.complete) {
+        // Photorealistic original render
+        ctx.fillStyle = '#140822';
+        ctx.fillRect(0, 0, 680, 660);
+        ctx.drawImage(coloredImg, 0, 0);
+        ctx.drawImage(outlineImg, 0, 0);
+        return;
+      }
+      
+      const imgData = ctx.createImageData(680, 660);
+      const data = imgData.data;
+      
+      for (let i = 0; i < 680 * 660; i++) {
+        const reg = regionsData[i * 4];
+        if (reg > 0) {
+          const col = regionFills[reg] || blankColor;
+          data[i * 4] = col.r;
+          data[i * 4 + 1] = col.g;
+          data[i * 4 + 2] = col.b;
+          data[i * 4 + 3] = 255;
+        } else {
+          data[i * 4 + 3] = 0;
+        }
+      }
+      
+      ctx.putImageData(imgData, 0, 0);
+      ctx.drawImage(outlineImg, 0, 0);
+    }
+    
+    function handlePointer(e) {
+      if (!regionsData) return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = 680 / rect.width;
+      const scaleY = 660 / rect.height;
+      const x = Math.floor((e.clientX - rect.left) * scaleX);
+      const y = Math.floor((e.clientY - rect.top) * scaleY);
+      
+      if (x < 0 || x >= 680 || y < 0 || y >= 660) return;
+      
+      const reg = regionsData[(y * 680 + x) * 4];
+      if (reg > 0) {
+        isMagicFilled = false;
+        const rgb = hexToRgb(currentColor);
+        regionFills[reg] = rgb;
+        renderCanvas();
+        document.getElementById('rangoliStatus').textContent = '✨ Painted section with chosen color!';
+      }
+    }
+    
+    canvas.addEventListener('pointerdown', handlePointer);
+    
+    function toggleGroupFill() {
+      groupFillMode = !groupFillMode;
+      const btn = document.getElementById('groupBtn');
+      btn.textContent = groupFillMode ? '✨ Linked Color: ON' : '✨ Single Part';
+      btn.classList.toggle('active', groupFillMode);
+    }
+    
+    function magicFillRangoli() {
+      isMagicFilled = true;
+      Object.keys(originalColorsHex).forEach(k => {
+        regionFills[k] = hexToRgb(originalColorsHex[k]);
+      });
+      renderCanvas();
+      document.getElementById('rangoliStatus').textContent = '✨ Rangoli filled with authentic sacred colors!';
+    }
+    
+    function resetRangoli() {
+      isMagicFilled = false;
+      regionFills = {};
+      renderCanvas();
+      document.getElementById('rangoliStatus').textContent = '✨ Blank rangoli outline ready to color.';
+    }
+  </script>
+</body>
+</html>

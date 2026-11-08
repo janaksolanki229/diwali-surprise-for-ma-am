@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body style='margin:0;'>
+<iframe id='f' src='http://127.0.0.1:8995/index.html?s=2' style='width:430px;height:920px;border:none;'></iframe>
+<script>
+window.onload = () => {
+  setTimeout(() => {
+    const win = document.getElementById('f').contentWindow;
+    win.magicFillRangoli();
+  }, 1200);
+};
+</script>
+</body>
+</html>
